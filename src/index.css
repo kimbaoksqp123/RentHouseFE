@@ -1,0 +1,18 @@
+@font-face {
+  font-family: 'Quicksand';
+  src: url(./fonts/Quicksand.ttf) format('truetype');
+  font-style: normal;
+}
+
+body {
+  margin: 0;
+  font-family: 'Quicksand' !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #000 !important;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}

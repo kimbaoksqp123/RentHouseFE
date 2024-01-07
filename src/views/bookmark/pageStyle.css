@@ -1,0 +1,5 @@
+@media only screen and (max-width: 768px) {
+.md-down-collapse {
+    display: none;
+}
+}
