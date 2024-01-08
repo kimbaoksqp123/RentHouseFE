@@ -116,15 +116,17 @@ export default function Layout({ children }) {
               </Dropdown.Menu>
             </Dropdown>
           )}
-          <Button
-            variant=""
-            style={{ backgroundColor: "#E44A5D", color: "white" }}
-            className={btnStyle}
-          >
-            <span className="fs-14 fw-500">
-              <IoMdAdd /> Đăng tin mới
-            </span>
-          </Button>
+          <Link to="/post_register" className={btnStyle + " nav-link"}>
+            <Button
+              variant=""
+              style={{ backgroundColor: "#E44A5D", color: "white" }}
+              className={btnStyle}
+            >
+              <span className="fs-14 fw-500">
+                <IoMdAdd /> Đăng tin mới
+              </span>
+            </Button>
+          </Link>
         </Stack>
       </div>
       <div
@@ -181,12 +183,12 @@ export default function Layout({ children }) {
         style={{ backgroundColor: "#EAFEF1" }}
       >
         <div className="text-main-bolder fw-bold fs-30 fw-700">
-          Tìm phòng trọ nhanh, phòng trọ mới nhất trên toàn quốc
+          Đăng tin phòng trọ nhanh, tìm kiếm người thuê nhanh nhất trên toàn quốc
         </div>
         <div className="fw-400">
           Hiệu quả với 100.000+ tin đăng và 2.500.000 lượt xem mỗi tháng
         </div>
-        <SearchForm />
+        {/* <SearchForm /> */}
       </div>
       {children}
     </>
