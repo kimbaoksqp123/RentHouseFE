@@ -188,7 +188,7 @@ export default function Layout({ children }) {
         <div className="fw-400">
           Hiệu quả với 100.000+ tin đăng và 2.500.000 lượt xem mỗi tháng
         </div>
-        {/* <SearchForm /> */}
+        <SearchForm />
       </div>
       {children}
     </>
