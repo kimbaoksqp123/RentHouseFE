@@ -156,13 +156,13 @@ export default function PostDetail() {
               Đã đăng vào {dayjs(postDetail.created_at).format("HH:ss")} ngày{" "}
               {dayjs(postDetail.created_at).format("DD/MM/YYYY")}
             </p>
-            <div className="mt-2 mx-3">
-              <div className="d-inline-block fw-bold text-danger">
+            <div className="d-flex mt-2 mx-3">
+              <div className="d-flex fw-bold text-danger">
                 {postDetail.price / 1000000} triệu/tháng
                 <LuDot className="mx-1" />
                 {postDetail.land_area} m<sup>2</sup>
               </div>
-              <div className="d-inline-block ms-4">
+              <div className="d-flex ms-4">
                 {postDetail.bedroom_num} <IBedroom />
                 <LuDot className="mx-1" />
                 {postDetail.bathroom_num} <IBadroom />

@@ -111,13 +111,13 @@ export default function SavedListPost() {
               >
                 {item.title}
               </div>
-              <div className="mt-2">
-                <div className="d-inline-block fw-bold text-danger fw-700">
+              <div className="mt-2 d-flex">
+                <div className="d-flex  fw-bold text-danger fw-700">
                   {item.price / 1000000} triệu/tháng
                   <LuDot className="mx-1" />
                   {item.land_area} m<sup>2</sup>
                 </div>
-                <div className="d-inline-block ms-4">
+                <div className="d-flex ms-4">
                   {item.bedroom_num} <IBedroom />
                   <LuDot className="mx-1" />
                   {item.bedroom_num} <IBadroom />

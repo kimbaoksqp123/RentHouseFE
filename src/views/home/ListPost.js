@@ -185,13 +185,13 @@ export default function ListPost() {
               >
                 {item.title}
               </div>
-              <div className="mt-2">
-                <div className="d-inline-block fw-bold text-danger fw-700">
+              <div className="mt-2 d-flex">
+                <div className="d-flex  fw-bold text-danger fw-700">
                   {item.price / 1000000} triệu/tháng
                   <LuDot className="mx-1" />
                   {item.land_area} m<sup>2</sup>
                 </div>
-                <div className="d-inline-block ms-4">
+                <div className="d-flex  ms-4">
                   {item.bedroom_num} <IBedroom />
                   <LuDot className="mx-1" />
                   {item.bedroom_num} <IBadroom />
@@ -213,6 +213,8 @@ export default function ListPost() {
                   />
                 )}
               </div>
+              
+
               <div className="mt-2 fw-600">Địa chỉ: {item.address}</div>
               <div className="text-sm fw-500">
                 Đã đăng vào {dayjs(item.created_at).format("HH:ss")} ngày{" "}

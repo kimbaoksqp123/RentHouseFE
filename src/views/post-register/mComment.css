@@ -1,0 +1,164 @@
+.post-comment-content {
+    width: 100%;
+    height: auto;
+}
+
+.comment-title h4 {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.input-comment,
+.other-comment {
+    border-radius: 5px;
+    border: 1px solid #373E42;
+    background: #FFF;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    padding: 20px;
+    margin-bottom: 40px;
+    height: auto;
+}
+
+.input-comment .userInfo {
+    display: flex;
+    align-items: center;
+}
+
+.input-comment .userInfo img {
+    width: 45px;
+    height: 45px;
+}
+
+.input-comment .userInfo .txt-username {
+    margin-left: 2px;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.input-comment .input-content {
+    width: 100%;
+    height: auto;
+    border: none;
+    overflow: auto;
+    outline: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    resize: none;
+    /*remove the resize handle on the bottom right*/
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.input-comment .solid-line {
+    border: 1px solid #c5c8c6;
+    margin-bottom: 15px;
+}
+
+.input-comment .input-submit {
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 30px;
+}
+
+.input-comment .input-submit .btn-submit {
+    display: flex;
+    width: 120px;
+    height: 40px;
+    border-radius: 5px;
+    background-color: #4FAE5A;
+    color: #FFF;
+    font-weight: 600;
+    justify-content: center;
+    align-items: center;
+}
+
+.input-comment .input-submit .btn-submit:hover {
+    cursor: pointer;
+    background-color: #5ece6b;
+}
+
+.input-comment {
+    border-radius: 5px;
+    border: 1px solid #373E42;
+    background: #FFF;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    padding: 20px;
+    margin-bottom: 40px;
+    height: auto;
+}
+
+/* other comment */
+.other-comment .userInfo {
+    display: flex;
+    align-items: center;
+}
+
+.other-comment .userInfo img {
+    width: 45px;
+    height: 45px;
+}
+
+.other-comment .userInfo .txt-username {
+    margin-left: 2px;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.other-comment .userInfo .txt-time {
+    margin-left: 5px;
+    font-size: 14px;
+    color: #98989d;
+    font-weight: 600;
+}
+
+.other-comment .comment-content {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.other-comment .solid-line {
+    border: 1px solid #c5c8c6;
+    margin-bottom: 15px;
+}
+
+.other-comment .react-container {
+    display: flex;
+    align-items: center;
+}
+
+.other-comment .react-container .like-icon {
+    font-size: 20px;
+    margin-right: 10px;
+}
+
+.other-comment .react-container .like-icon:hover {
+    cursor: pointer;
+}
+
+.other-comment .react-container .like-count {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+/* Load more */
+
+.post-comment-content .load-more {
+    width: 100%;
+    padding: 10px 0;
+    text-align: center;
+    background-color: #E0E0E1;
+}
+
+.post-comment-content .load-more:hover {
+    cursor: pointer;
+    background-color: #e8e8ee;
+}
+
+.post-comment-content .load-more .load-more-btn {
+    font-weight: 700;
+}
+
+.post-comment-content .txt-noComment {
+    font-weight: 600;
+}

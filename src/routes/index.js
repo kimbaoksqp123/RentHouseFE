@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Layout from "../views/layout";
 import Home from "../views/home";
 import PostDetail from "../views/post-detail";
+import PostRegister from "../views/post-register";
 import { createContext, useEffect, useState } from "react";
 import postApi from "../apis/postApi";
 import Login from "../views/auth/Login";
@@ -78,6 +79,7 @@ const AppRoutes = () => {
                   <Route path="/" element={<Home />} />
                   <Route path="/post/:postId" element={<PostDetail />} />
                   <Route path="/bookmarks" element={<Bookmark />} />
+                  <Route path="/post_register" element={<PostRegister />} />
                 </Routes>
               </Layout>
             </PostContext.Provider>
