@@ -104,7 +104,7 @@ export const IApartAll = () => {
     </svg>
   );
 };
-export const IApart1 = () => {
+export const IApart3 = () => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -164,7 +164,7 @@ export const IApart2 = () => {
     </svg>
   );
 };
-export const IApart3 = () => {
+export const IApart1 = () => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -186,7 +186,8 @@ export const IApart3 = () => {
       </defs>
     </svg>
   );
-};
+}
+
 export const ILocation = () => {
   return (
     <svg

@@ -48,10 +48,11 @@ export default function ApartTypeFilterForm({ apartTypes, setApartTypes }) {
         <button
           id="reset-type"
           type="reset"
-          className="border-0 bg-white text-start ps-3 py-1 text-hover-main fs-14 fw-500"
+          className="border-0 bg-white d-flex items-center space-x-1 px-3 py-1 hover:text-blue-500 text-base font-medium"
           onClick={() => setApartTypes([])}
         >
-          <GrPowerReset /> Đặt lại
+          <GrPowerReset className="inline-block mr-2"/>
+           Đặt lại
         </button>
       </Form>
     </div>

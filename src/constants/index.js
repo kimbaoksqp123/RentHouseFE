@@ -29,9 +29,9 @@ export const areaFilter = [
   { min: 500, max: 0 },
 ];
 export const apartFilter = [
-  { name: "Phòng trọ", value: 1 },
-  { name: "Nhà nguyên căn", value: 2 },
-  { name: "Căn hộ chung cư", value: 3 },  
+  { name: "Phòng trọ", value: 0 },
+  { name: "Nhà nguyên căn", value: 1 },
+  { name: "Căn hộ chung cư", value: 2 },  
 ];
 export const districtList = [
   { id: 0, name: "Hai Bà Trưng" },
