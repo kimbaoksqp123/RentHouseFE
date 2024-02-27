@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const customAxios = axios.create({
-  baseURL: "https://cwy5doxgyfv4ga6c3l7lhzuha40epngj.lambda-url.ap-southeast-1.on.aws/api",
+  baseURL: "http://127.0.0.1:8000/api",
   // paramsSerializer: params => queryString.stringify(params),
 });
 
