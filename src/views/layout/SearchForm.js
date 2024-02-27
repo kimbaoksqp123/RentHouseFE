@@ -135,7 +135,7 @@ export default function SearchForm() {
     }
     if (district) filterCondition.district = removeDivisionType(district);
     if (ward) filterCondition.ward = removeDivisionType(ward);
-    // if (street) filterCondition.street = street;    
+    // if (street) filterCondition.street = street;
     setFilterCondition(filterCondition);
     if (window.location.pathname !== "/") navigate("/");
   };
@@ -242,12 +242,15 @@ export default function SearchForm() {
             message={"Vui lòng chọn Phường/Xã"}
           /> */}
         </div>
-        <span
-          className="d-inline-block ms-3 mb-2 cursor-pointer text-hover-main"
-          onClick={() => setDistrict("")}
+        <button
+          id="reset-type"
+          type="reset"
+          className="border-0 bg-white d-flex items-center space-x-1 px-3 py-1 hover:text-blue-500 text-base font-medium"
+          onClick={() => setApartTypes([])}
         >
-          <GrPowerReset /> Đặt lại
-        </span>
+          <GrPowerReset className="inline-block mr-2" />
+          Đặt lại
+        </button>
       </FilterSelector>
       <FilterSelector
         icon={<IoPricetagOutline className="fs-5" />}
@@ -260,15 +263,17 @@ export default function SearchForm() {
       </FilterSelector>
       <button
         type="button"
-        className="px-3 mb-1 border-0 rounded bg-main text-white fs-14 fw-600"
-        style={{ height: "44px", width: "125px" }}
+        className="px-3 mb-1 rounded bg-main text-white text-base font-semibold d-flex items-center justify-center"
+        style={{ height: "44px", width: "136px" }}
         onClick={handleSearch}
       >
         <span>Tìm kiếm</span>
         {!isSearchLoading ? (
-          <CiSearch className="ms-1 fs-4" />
+          <CiSearch className="ml-1 w-6 h-6" />
         ) : (
-          <Spinner size="sm" className="ms-1" />
+          <div className="ml-1">
+            <Spinner className="w-6 h-6" />
+          </div>
         )}
       </button>
     </Stack>

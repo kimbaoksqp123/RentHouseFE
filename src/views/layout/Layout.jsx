@@ -18,7 +18,9 @@ export default function Layout({ children }) {
     setNavbarApartType,
     setIsResetMainFilter,
   } = useContext(PostContext);
-  const btnStyle = "d-flex align-items-center gap-1 cursor-pointer";
+
+  const btnStyle = "flex items-center gap-1 cursor-pointer";
+
   const user = JSON.parse(localStorage.getItem("user"));
   const [isAuth, setIsAuth] = useState(false);
   const navigate = useNavigate();
@@ -56,7 +58,7 @@ export default function Layout({ children }) {
           className="border py-2 pe-3 bg-white"
         >
           <div
-            className={btnStyle + " ms-auto nav-link"}
+            className={`${btnStyle} ml-auto text-red-500`}
             onClick={() => {
               if (!isAuth) toast.warn("Vui lòng đăng nhập!");
               else navigate("/bookmarks");
@@ -67,7 +69,7 @@ export default function Layout({ children }) {
           </div>
           {!isAuth ? (
             <>
-              <Link to="login" className={btnStyle + " nav-link"}>
+              {/* <Link to="login" className={btnStyle + " nav-link"}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -84,8 +86,33 @@ export default function Layout({ children }) {
                   />
                 </svg>
                 <span className="fs-14 fw-500">Đăng nhập</span>
+              </Link> */}
+              <Link
+                to="login"
+                className={`${btnStyle}  d-flex items-center gap-1 nav-link text-blue-500 `}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <path
+                    d="M2.3999 21.6L2.40031 17.9996C2.40053 16.0115 4.01224 14.4 6.00031 14.4H11.9999M19.0285 13.5L21.5999 15.9M21.5999 15.9L19.0285 18.3M21.5999 15.9H14.9999M14.3999 6C14.3999 7.98822 12.7881 9.6 10.7999 9.6C8.81167 9.6 7.1999 7.98822 7.1999 6C7.1999 4.01177 8.81167 2.4 10.7999 2.4C12.7881 2.4 14.3999 4.01177 14.3999 6Z"
+                    stroke="#4BA558"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                <span className="text-base font-medium">Đăng nhập</span>
               </Link>
-              <Button variant="" className={btnStyle}>
+
+              <Link
+                to="register"
+                className={`${btnStyle}  d-flex items-center gap-1 nav-link text-blue-500 `}
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -101,8 +128,8 @@ export default function Layout({ children }) {
                     strokeLinejoin="round"
                   />
                 </svg>
-                <span className="fs-14 fw-500">Đăng ký</span>
-              </Button>
+                <span className="text-base font-medium">Đăng ký</span>
+              </Link>
             </>
           ) : (
             <Dropdown className="">
@@ -117,13 +144,9 @@ export default function Layout({ children }) {
             </Dropdown>
           )}
           <Link to="/post_register" className={btnStyle + " nav-link"}>
-            <Button
-              variant=""
-              style={{ backgroundColor: "#E44A5D", color: "white" }}
-              className={btnStyle}
-            >
-              <span className="fs-14 fw-500">
-                <IoMdAdd /> Đăng tin mới
+            <Button className={`${btnStyle}`}>
+              <span className="text-base font-medium">
+                <IoMdAdd className="inline-block mr-2" /> Đăng tin mới
               </span>
             </Button>
           </Link>
@@ -183,7 +206,8 @@ export default function Layout({ children }) {
         style={{ backgroundColor: "#EAFEF1" }}
       >
         <div className="text-main-bolder fw-bold fs-30 fw-700">
-          Đăng tin phòng trọ nhanh, tìm kiếm người thuê nhanh nhất trên toàn quốc
+          Đăng tin phòng trọ nhanh, tìm kiếm người thuê nhanh nhất trên toàn
+          quốc
         </div>
         <div className="fw-400">
           Hiệu quả với 100.000+ tin đăng và 2.500.000 lượt xem mỗi tháng
