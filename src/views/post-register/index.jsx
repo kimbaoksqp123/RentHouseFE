@@ -81,9 +81,9 @@ export default function PostRegister() {
       </div>
     </div>
   );
-  // const { user } = useAuth();
-  // const userID = user ? user.id : null;
-  const userID = 12;
+  const user = JSON.parse(localStorage.getItem("user"));
+  const userID = user ? user.id : null;
+
   const token = localStorage.getItem("token");
 
   const [form] = Form.useForm();
