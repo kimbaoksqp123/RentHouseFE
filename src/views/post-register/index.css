@@ -7,7 +7,6 @@
 
 .left-box {
     width: 840px;
-
 }
 
 .box-border {
@@ -17,22 +16,12 @@
     padding: 10px;
 }
 
-.post-register {
+.basic_information {
     border-radius: 5px;
     border: 1px solid #4FAE5A;
     background: #FFF;
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
     padding: 10px;
-}
-
-.post-comment {
-    border-radius: 5px;
-    border: 1px solid #4FAE5A;
-    background: #FFF;
-    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-    padding: 30px;
-    margin-top: 15px;
-    margin-bottom: 20px;
 }
 
 .right-box {
@@ -42,8 +31,6 @@
 .each-slide-effect {
     height: 350px;
 }
-
-
 
 .each-slide-effect span {
     padding: 20px;
@@ -58,7 +45,6 @@
     bottom: -10px;
     left: 50%;
     transform: translateX(-50%);
-
 }
 
 .indicator {
@@ -149,7 +135,6 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-
 }
 
 .text-overflow {
