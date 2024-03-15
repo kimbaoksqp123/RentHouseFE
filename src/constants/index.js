@@ -1,3 +1,5 @@
+export const serveURL = "http://127.0.0.1:8000/api/";
+
 export const sortTypes = [
     { name: "Mặc định", value: 0 },
     { name: "Tin mới nhất", value: 1 },

@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { Form, Button, Upload, Modal, Space, Input, Select } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { locationList } from "../../constants/locationList";
+import { serveURL } from "../../constants/index";
 
 const formItemLayout = {
   labelCol: {
@@ -105,7 +106,7 @@ export default function BasicInformation() {
     // You can send the form data to your API using Axios
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/posts/store",
+        `${serveURL}posts/store`,
         values,
         {
           headers: {
@@ -166,7 +167,7 @@ export default function BasicInformation() {
           rules={[
             {
               required: true,
-              message: "Hãy nhập tên phòng trọ",
+              message: "Hãy chọn kiểu phòng trọ",
             },
           ]}
         >
@@ -178,15 +179,15 @@ export default function BasicInformation() {
         </Form.Item>
         <Form.Item
           name="title"
-          label="Tên phòng trọ"
+          label="Tiêu đề"
           rules={[
             {
               required: true,
-              message: "Hãy nhập tên phòng trọ",
+              message: "Hãy nhập tiêu đề phòng trọ",
             },
           ]}
         >
-          <Input placeholder="Nhập tên phòng trọ"></Input>
+          <Input placeholder="Nhập tiêu đề phòng trọ"></Input>
         </Form.Item>
 
         <Form.Item
@@ -383,7 +384,7 @@ export default function BasicInformation() {
             onPreview={handlePreview}
             onChange={handleImageAlbum}
           >
-            {imageAlbum.length >= 4 ? null : uploadButton}
+            {imageAlbum.length >= 10 ? null : uploadButton}
           </Upload>
           <Modal
             open={previewOpen}
