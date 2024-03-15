@@ -180,7 +180,7 @@ export default function ListPost() {
               <div
                 className="fw-bold mt-2 cursor-pointer fs-18 fw-700 text-hover-main"
                 onClick={() => {
-                  navigate("/post/" + item.id);
+                  navigate("/house/" + item.id);
                 }}
               >
                 {item.title}
@@ -231,7 +231,7 @@ export default function ListPost() {
           <Button
             variant=""
             onClick={() => handleRedirectPage("BACK", 0)}
-            className="me-2 border border-2 fw-bold"
+            className="me-2 border-2 fw-bold"
           >
             {"<"}
           </Button>
@@ -240,7 +240,7 @@ export default function ListPost() {
               variant=""
               key={index}
               className={clsx(
-                "me-2 border border-2 fw-bold",
+                "me-2 border-2 fw-bold",
                 curPage === index + 1 && "border-primary"
               )}
               onClick={() => handleRedirectPage("", index)}
@@ -250,7 +250,7 @@ export default function ListPost() {
           ))}
           <Button
             variant=""
-            className="border border-2 fw-bold"
+            className="border-2 fw-bold"
             onClick={() => handleRedirectPage("NEXT", 0)}
           >
             {">"}

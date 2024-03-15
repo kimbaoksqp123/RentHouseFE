@@ -43,7 +43,7 @@ export default function BasicInformation() {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
-  const [fileList, setFileList] = useState([]);
+  // const [fileList, setFileList] = useState([]);
   const [imageAlbum, setImageAlbum] = useState([]);
 
   const handleCancel = () => setPreviewOpen(false);
@@ -57,12 +57,12 @@ export default function BasicInformation() {
       file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
     );
   };
-  const handleChange = ({ fileList: newFileList }) => {
-    setFileList(newFileList);
-    form.setFieldsValue({
-      image: newFileList.length > 0 ? newFileList[0].originFileObj : null,
-    });
-  };
+  // const handleChange = ({ fileList: newFileList }) => {
+  //   setFileList(newFileList);
+  //   form.setFieldsValue({
+  //     image: newFileList.length > 0 ? newFileList[0].originFileObj : null,
+  //   });
+  // };
   const handleImageAlbum = ({ fileList: newFileList }) => {
     setImageAlbum(newFileList);
     form.setFieldsValue({
@@ -85,6 +85,8 @@ export default function BasicInformation() {
   const user = JSON.parse(localStorage.getItem("user"));
   const userID = user ? user.id : null;
 
+  // console.log(userID);
+
   const token = localStorage.getItem("token");
 
   const [form] = Form.useForm();
@@ -103,7 +105,7 @@ export default function BasicInformation() {
     // You can send the form data to your API using Axios
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/house/store",
+        "http://127.0.0.1:8000/api/posts/store",
         values,
         {
           headers: {
@@ -114,10 +116,12 @@ export default function BasicInformation() {
       );
 
       // Handle the response from the API as needed
-      console.log("API Response:", response.data);
+
       if (response.status === 200) {
-        // Redirect to the list page
-        navigate("/search");
+        // Redirect to the page detail
+
+        const houseId = response.data.id;
+        navigate(`/house/${houseId}`);
       }
     } catch (error) {
       // Handle errors
@@ -130,35 +134,34 @@ export default function BasicInformation() {
     setSelectedWard(null);
     form.setFieldValue({
       ward: null,
-    })
+    });
   };
 
   useEffect(() => {
     if (!selectedDistrict) {
       setWards("");
     } else {
-    let wardList = locationList
-      .find((item) => item.name === selectedDistrict.value)
-      ?.wards.map((item) => {
-        return item.name;
-      });
-    setWards(wardList);
-  }
+      let wardList = locationList
+        .find((item) => item.name === selectedDistrict.value)
+        ?.wards.map((item) => {
+          return item.name;
+        });
+      setWards(wardList);
+    }
   }, [selectedDistrict]);
 
   const wardArray = Object.values(wards);
-  
+
   const handleWardChange = (value, ward) => {
     setSelectedWard(ward);
   };
-
 
   return (
     <div className="basic_information">
       <Form {...formItemLayout} form={form} onFinish={onFinish}>
         <Form.Item name="userID" label="User ID" hidden></Form.Item>
         <Form.Item
-          name="house_typeID"
+          name="type"
           label="Kiểu nhà trọ"
           rules={[
             {
@@ -185,7 +188,7 @@ export default function BasicInformation() {
         >
           <Input placeholder="Nhập tên phòng trọ"></Input>
         </Form.Item>
-        
+
         <Form.Item
           name="district"
           label="Quận/Huyện"
@@ -196,8 +199,7 @@ export default function BasicInformation() {
             },
           ]}
         >
-          <Select placeholder="Quận/Huyện"
-          onChange={handleDistrictChange}>
+          <Select placeholder="Quận/Huyện" onChange={handleDistrictChange}>
             {locationList.map((location) => (
               <Select.Option key={location.code} value={location.name}>
                 {location.name}
@@ -206,28 +208,28 @@ export default function BasicInformation() {
           </Select>
         </Form.Item>
         <Form.Item
-        name="ward"
-        label="Phường/Xã"
-        rules={[
-          {
-            required: true,
-            message: "Hãy chọn Phường/Xã",
-          },
-        ]}
-      >
-        <Select
-          id="ward"
-          placeholder="Chọn Phường/Xã"
-          onChange={handleWardChange}
-          value={selectedWard}
+          name="ward"
+          label="Phường/Xã"
+          rules={[
+            {
+              required: true,
+              message: "Hãy chọn Phường/Xã",
+            },
+          ]}
         >
-          {wardArray.map((ward, index) => (
-            <Select.Option key={index} value={ward}>
-              {ward}
-            </Select.Option>
-          ))}
-        </Select>
-      </Form.Item>
+          <Select
+            id="ward"
+            placeholder="Chọn Phường/Xã"
+            onChange={handleWardChange}
+            value={selectedWard}
+          >
+            {wardArray.map((ward, index) => (
+              <Select.Option key={index} value={ward}>
+                {ward}
+              </Select.Option>
+            ))}
+          </Select>
+        </Form.Item>
         <Form.Item
           name="address"
           label="Địa chỉ"
@@ -348,7 +350,7 @@ export default function BasicInformation() {
         >
           <Input placeholder="Nhập Số phòng tắm"></Input>
         </Form.Item>
-        <Form.Item name="image" label="Upload" valuePropName="image">
+        {/* <Form.Item name="image" label="Upload" valuePropName="image">
           <Upload
             action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
             listType="picture-card"
@@ -372,7 +374,7 @@ export default function BasicInformation() {
               src={previewImage}
             />
           </Modal>
-        </Form.Item>
+        </Form.Item> */}
         <Form.Item name="imageAlbum" label="Upload" valuePropName="imageAlbum">
           <Upload
             action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
@@ -381,7 +383,7 @@ export default function BasicInformation() {
             onPreview={handlePreview}
             onChange={handleImageAlbum}
           >
-            {imageAlbum.length >= 2 ? null : uploadButton}
+            {imageAlbum.length >= 4 ? null : uploadButton}
           </Upload>
           <Modal
             open={previewOpen}
@@ -399,7 +401,11 @@ export default function BasicInformation() {
           }}
         >
           <Space>
-            <Button className="bg-green-500 hover:bg-green-600 text-white py-2 px-2.5 rounded" htmlType="submit" size="large">
+            <Button
+              className="bg-green-500 hover:bg-green-600 text-white py-2 px-2.5 rounded"
+              htmlType="submit"
+              size="large"
+            >
               Submit
             </Button>
           </Space>

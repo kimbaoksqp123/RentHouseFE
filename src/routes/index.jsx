@@ -30,6 +30,7 @@ const AppRoutes = () => {
         ...filterCondition,
       });
       setListPost(res);
+      console.log(listPost);
       setIsSearchLoading(false);
     } catch (e) {
       setIsSearchLoading(false);
@@ -77,9 +78,9 @@ const AppRoutes = () => {
               <Layout>
                 <Routes>
                   <Route path="/" element={<Home />} />
-                  <Route path="/post/:postId" element={<PostDetail />} />
+                  <Route path="/house/:postId" element={<PostDetail />} />
                   <Route path="/bookmarks" element={<Bookmark />} />
-                  <Route path="/post_register" element={<PostRegister />} />
+                  <Route path="/house_register" element={<PostRegister />} />
                 </Routes>
               </Layout>
             </PostContext.Provider>
