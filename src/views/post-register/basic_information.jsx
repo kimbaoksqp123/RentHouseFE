@@ -3,10 +3,12 @@ import axios from "axios";
 import "react-slideshow-image/dist/styles.css";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Form, Button, Upload, Modal, Space, Input, Select } from "antd";
+import { Form, Button, Upload, Modal, Space, Input, Select, InputNumber } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { locationList } from "../../constants/locationList";
 import { serveURL } from "../../constants/index";
+
+const { TextArea } = Input;
 
 const formItemLayout = {
   labelCol: {
@@ -301,7 +303,8 @@ export default function BasicInformation() {
             },
           ]}
         >
-          <Input placeholder="Nhập mô tả"></Input>
+          {/* <Input placeholder="Nhập mô tả"></Input> */}
+          <TextArea placeholder="Nhập mô tả" rows={4} />
         </Form.Item>
         <Form.Item
           name="bedroom_num"
@@ -325,7 +328,7 @@ export default function BasicInformation() {
             },
           ]}
         >
-          <Input placeholder="Nhập số phòng ngủ"></Input>
+          <InputNumber placeholder="Nhập số phòng ngủ" min={1} max={10} defaultValue={1}/>
         </Form.Item>
         <Form.Item
           name="bathroom_num"
@@ -349,7 +352,7 @@ export default function BasicInformation() {
             },
           ]}
         >
-          <Input placeholder="Nhập Số phòng tắm"></Input>
+          <InputNumber placeholder="Nhập Số phòng tắm" min={1} max={10} defaultValue={1}/>
         </Form.Item>
         {/* <Form.Item name="image" label="Upload" valuePropName="image">
           <Upload
@@ -376,7 +379,7 @@ export default function BasicInformation() {
             />
           </Modal>
         </Form.Item> */}
-        <Form.Item name="imageAlbum" label="Upload" valuePropName="imageAlbum">
+        <Form.Item name="imageAlbum" label="Album ảnh" valuePropName="imageAlbum">
           <Upload
             action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
             listType="picture-card"
@@ -407,7 +410,7 @@ export default function BasicInformation() {
               htmlType="submit"
               size="large"
             >
-              Submit
+              Tiếp theo
             </Button>
           </Space>
         </Form.Item>

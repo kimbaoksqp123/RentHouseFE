@@ -6,7 +6,6 @@ import { faPhone } from "@fortawesome/free-solid-svg-icons";
 import avatarImg from "../../assets/avatar.png";
 import { Tabs } from "antd";
 import { tabRegister } from "../../constants/index";
-import BasicInformation from "./basic_information";
 
 export default function PostRegister() {
   return (
@@ -18,7 +17,7 @@ export default function PostRegister() {
             return {
               label: `${tab.name}`,
               key: tab.id,
-              children: <BasicInformation/>,
+              children: tab.children,
             };
           })}
         />
