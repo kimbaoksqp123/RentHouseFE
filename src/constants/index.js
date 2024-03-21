@@ -1,4 +1,5 @@
 import BasicInformation from "../views/post-register/basic_information";
+import Utility from "../views/post-register/utility";
 
 export const serveURL = "http://127.0.0.1:8000/api/";
 
@@ -104,5 +105,5 @@ export const locationList = [{
 
 export const tabRegister = [
     { id: 0, name: "Thông tin cơ bản", children: <BasicInformation/> },
-    { id: 1, name: "Tiện ích", children: <BasicInformation/> },
+    { id: 1, name: "Tiện ích", children: <Utility/> },
 ];
