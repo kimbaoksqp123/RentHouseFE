@@ -16,6 +16,7 @@ import {
 import { PlusOutlined } from "@ant-design/icons";
 import { serveURL } from "../../constants/index";
 import { IoMdAddCircleOutline } from "react-icons/io";
+import { GrSubtractCircle } from "react-icons/gr";
 
 const formItemLayout = {
   labelCol: {
@@ -63,12 +64,20 @@ export default function Utility() {
       file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
     );
   };
-  const handleChange = ({ fileList: newFileList }) => {
-    setFileList(newFileList);
-    form.setFieldsValue({
-      image: newFileList.length > 0 ? newFileList[0].originFileObj : null,
-    });
-  };
+
+  const handleChange =
+    (index) =>
+    ({ fileList: newFileList }) => {
+      const newImageFileLists = [...fileList];
+      newImageFileLists[index] = newFileList;
+      setFileList(newImageFileLists);
+      form.setFieldsValue({
+        utilities: fileList.map((file) => ({
+          image: file && file.length > 0 ? file[0].originFileObj : null,
+        })),
+      });
+    };
+
   const uploadButton = (
     <div>
       <PlusOutlined />
@@ -83,21 +92,45 @@ export default function Utility() {
   );
 
   const [form] = Form.useForm();
-  const [utilities, setUtilities] = useState([]);
+  const [utilities, setUtilities] = useState([{ image: null }]);
   const onFinish = async (values) => {
     console.log("Received values from form:", values);
   };
   const addUtility = () => {
     setUtilities([...utilities, {}]);
   };
+  const removeUtility = (index) => {
+    const newUtilities = [...utilities];
+    newUtilities.splice(index, 1);
+    setUtilities(newUtilities);
+
+    const newImageFileLists = [...fileList];
+    newImageFileLists.splice(index, 1);
+    setFileList(newImageFileLists);
+
+    form.setFieldsValue({
+      utilities: fileList.map((file) => ({
+        image:
+          file && file.length > 0 ? file[0].originFileObj : null,
+      })),
+    });
+  };
+
   return (
     <div className="utilities mb-2">
       <Form {...formItemLayout} form={form} onFinish={onFinish}>
         {utilities.map((utility, index) => (
-          <div key= {index} className="utility rounded-lg border border-green-500 bg-white shadow-md p-4 mb-4">
-            <Form.Item name={['utilities', index, 'houseID']} label="House ID" hidden></Form.Item>
+          <div
+            key={index}
+            className="utility rounded-lg border border-green-500 bg-white shadow-md p-4 mb-4"
+          >
             <Form.Item
-              name={['utilities', index, 'type']}
+              name={["utilities", index, "houseID"]}
+              label="House ID"
+              hidden
+            ></Form.Item>
+            <Form.Item
+              name={["utilities", index, "type"]}
               label="Kiểu tiện ích"
               rules={[
                 {
@@ -113,7 +146,7 @@ export default function Utility() {
               </Select>
             </Form.Item>
             <Form.Item
-              name={['utilities', index, 'price']}
+              name={["utilities", index, "price"]}
               label="Chi phí(VNĐ)"
               rules={[
                 {
@@ -139,7 +172,7 @@ export default function Utility() {
               <Input placeholder="Chi chí trên 1 đơn vị tiện ích"></Input>
             </Form.Item>
             <Form.Item
-              name={['utilities', index, 'quantity']}
+              name={["utilities", index, "quantity"]}
               label="Số lượng"
               rules={[
                 {
@@ -167,15 +200,20 @@ export default function Utility() {
                 defaultValue={0}
               />
             </Form.Item>
-            <Form.Item name={['utilities', index, 'image']} label="Ảnh" valuePropName="image">
+            <Form.Item
+              key={index}
+              name={["utilities", index, "image"]}
+              label="Ảnh"
+              valuePropName="image"
+            >
               <Upload
                 action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
                 listType="picture-card"
-                fileList={fileList}
+                fileList={fileList[index] || []}
                 onPreview={handlePreview}
-                onChange={handleChange}
+                onChange={handleChange(index)}
               >
-                {fileList.length >= 1 ? null : uploadButton}
+                {fileList[index]?.length >= 1 ? null : uploadButton}
               </Upload>
               <Modal
                 open={previewOpen}
@@ -192,6 +230,13 @@ export default function Utility() {
                 />
               </Modal>
             </Form.Item>
+            <Button
+              className="bg-red-500 hover:bg-red-600 text-white py-2 px-2.5 rounded"
+              size="large"
+              onClick={removeUtility}
+            >
+              <GrSubtractCircle className="text-2xl" />
+            </Button>
           </div>
         ))}
         <Space className="mt-3">
