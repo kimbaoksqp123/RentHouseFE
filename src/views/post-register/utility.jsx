@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 import "react-slideshow-image/dist/styles.css";
-import { useState, } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Form,
@@ -52,7 +52,6 @@ export default function Utility() {
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
   const [fileList, setFileList] = useState([]);
-  const [utilities, setUtilities] = useState([{ image: [] }]);
 
   const handleCancel = () => setPreviewOpen(false);
   const handlePreview = async (file) => {
@@ -66,22 +65,23 @@ export default function Utility() {
     );
   };
 
-  const handleChange =
-    (index) =>
-    ({ fileList: newFileList }) => {
-      const newImageFileLists = [...fileList];
-      newImageFileLists[index] = newFileList;
-      setFileList(newImageFileLists);
-      const currentUtilities = form.getFieldValue('utilities');
-      const updatedUtilities = newImageFileLists.map((file, idx) => ({
-        ...currentUtilities[idx], // Giữ nguyên các giá trị của các trường khác
-        image: file && file.length > 0 ? file[0].originFileObj : null,
-      }));
-    
-      // Cập nhật lại giá trị của trường utilities trong form
-      form.setFieldsValue({ utilities: updatedUtilities });
-    };
-
+  const handleChange = (index) => ({ fileList: newFileList }) => {
+    const newImageFileLists = [...fileList];
+    newImageFileLists[index] = newFileList;
+    setFileList(newImageFileLists);
+  
+    // Lấy ra các giá trị hiện có của các trường khác trong utilities
+    const currentUtilities = form.getFieldValue('utilities');
+  
+    // Cập nhật giá trị mới của image trong utilities
+    const updatedUtilities = newImageFileLists.map((file, idx) => ({
+      ...currentUtilities[idx], // Giữ nguyên các giá trị của các trường khác
+      image: file && file.length > 0 ? file[0].originFileObj : null,
+    }));
+  
+    // Cập nhật lại giá trị của trường utilities trong form
+    form.setFieldsValue({ utilities: updatedUtilities });
+  };
   const uploadButton = (
     <div>
       <PlusOutlined />
@@ -96,7 +96,7 @@ export default function Utility() {
   );
 
   const [form] = Form.useForm();
-
+  const [utilities, setUtilities] = useState([{ image: null }]);
   const onFinish = async (values) => {
     console.log("Received values from form:", values);
   };
@@ -114,7 +114,8 @@ export default function Utility() {
 
     form.setFieldsValue({
       utilities: fileList.map((file) => ({
-        image: file && file.length > 0 ? file[0].originFileObj : null,
+        image:
+          file && file.length > 0 ? file[0].originFileObj : null,
       })),
     });
   };
