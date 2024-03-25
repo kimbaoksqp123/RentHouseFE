@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 import "react-slideshow-image/dist/styles.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Form,
@@ -52,6 +52,7 @@ export default function Utility() {
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
   const [fileList, setFileList] = useState([]);
+  const [listUtility, setListUtility] = useState([]);
 
   const handleCancel = () => setPreviewOpen(false);
   const handlePreview = async (file) => {
@@ -65,23 +66,25 @@ export default function Utility() {
     );
   };
 
-  const handleChange = (index) => ({ fileList: newFileList }) => {
-    const newImageFileLists = [...fileList];
-    newImageFileLists[index] = newFileList;
-    setFileList(newImageFileLists);
-  
-    // Lấy ra các giá trị hiện có của các trường khác trong utilities
-    const currentUtilities = form.getFieldValue('utilities');
-  
-    // Cập nhật giá trị mới của image trong utilities
-    const updatedUtilities = newImageFileLists.map((file, idx) => ({
-      ...currentUtilities[idx], // Giữ nguyên các giá trị của các trường khác
-      image: file && file.length > 0 ? file[0].originFileObj : null,
-    }));
-  
-    // Cập nhật lại giá trị của trường utilities trong form
-    form.setFieldsValue({ utilities: updatedUtilities });
-  };
+  const handleChange =
+    (index) =>
+    ({ fileList: newFileList }) => {
+      const newImageFileLists = [...fileList];
+      newImageFileLists[index] = newFileList;
+      setFileList(newImageFileLists);
+
+      // Lấy ra các giá trị hiện có của các trường khác trong utilities
+      const currentUtilities = form.getFieldValue("utilities");
+
+      // Cập nhật giá trị mới của image trong utilities
+      const updatedUtilities = newImageFileLists.map((file, idx) => ({
+        ...currentUtilities[idx], // Giữ nguyên các giá trị của các trường khác
+        image: file && file.length > 0 ? file[0].originFileObj : null,
+      }));
+
+      // Cập nhật lại giá trị của trường utilities trong form
+      form.setFieldsValue({ utilities: updatedUtilities });
+    };
   const uploadButton = (
     <div>
       <PlusOutlined />
@@ -114,11 +117,23 @@ export default function Utility() {
 
     form.setFieldsValue({
       utilities: fileList.map((file) => ({
-        image:
-          file && file.length > 0 ? file[0].originFileObj : null,
+        image: file && file.length > 0 ? file[0].originFileObj : null,
       })),
     });
   };
+
+  useEffect(() => {
+    const fetchUtilityData = async () => {
+      try {
+        const response = await axios.get(`${serveURL}utilities`);
+        setListUtility(response.data);
+      } catch (error) {
+        console.error("Error fetching utility data:", error);
+      }
+    };
+
+    fetchUtilityData();
+  }, []);
 
   return (
     <div className="utilities mb-2">
@@ -144,9 +159,11 @@ export default function Utility() {
               ]}
             >
               <Select placeholder="Chọn tiện ích">
-                <Select.Option value="1">Phòng trọ</Select.Option>
-                <Select.Option value="2">Nhà nguyên căn</Select.Option>
-                <Select.Option value="3">Chung cư Mini</Select.Option>
+                {listUtility.map((utility, index) => (
+                  <Select.Option key={utility.id} value={utility.id}>
+                    {utility.name}
+                  </Select.Option>
+                ))}
               </Select>
             </Form.Item>
             <Form.Item

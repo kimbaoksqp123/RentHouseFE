@@ -60,18 +60,12 @@ export default function BasicInformation() {
       file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
     );
   };
-  // const handleChange = ({ fileList: newFileList }) => {
-  //   setFileList(newFileList);
-  //   form.setFieldsValue({
-  //     image: newFileList.length > 0 ? newFileList[0].originFileObj : null,
-  //   });
-  // };
+
   const handleImageAlbum = ({ fileList: newFileList }) => {
     setImageAlbum(newFileList);
     form.setFieldsValue({
       imageAlbum: newFileList.map((file) => file.originFileObj),
     });
-    // console.log(form.getFieldValue());
   };
   const uploadButton = (
     <div>
