@@ -137,7 +137,8 @@ export default function BasicInformation({ sendDataToParent }) {
   useEffect(() => {
     // Set dữ liệu cho sendData
     sendDataToParent({ currenTab, houseID });
-  }, [currenTab, houseID, sendDataToParent]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currenTab, houseID]);
 
   const handleDistrictChange = (value, district) => {
     setSelectedDistrict(district);

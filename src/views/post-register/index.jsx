@@ -10,10 +10,11 @@ import { tabRegister } from "../../constants/index";
 export default function PostRegister() {
   const [sendData, setSendData] = useState({currentTab: 0, houseID: null});
   const handleDataFromChild = (data) => {
-    setSendData(data);
+    setSendData({
+      currentTab: data['currenTab'],
+      houseID: data['houseID'],
+    });
   };
-  console.log(sendData.currentTab);
- 
   return (
     <div className="main-box">
       <div className="left-box">
