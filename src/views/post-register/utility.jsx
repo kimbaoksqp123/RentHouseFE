@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 import "react-slideshow-image/dist/styles.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Form,
@@ -17,6 +17,8 @@ import { PlusOutlined } from "@ant-design/icons";
 import { serveURL } from "../../constants/index";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { GrSubtractCircle } from "react-icons/gr";
+import { HouseContext } from "./index";
+
 
 const formItemLayout = {
   labelCol: {
@@ -101,8 +103,8 @@ export default function Utility() {
   const [form] = Form.useForm();
   const [utilities, setUtilities] = useState([{ image: null }]);
   const onFinish = async (values) => {
-    console.log("Received values from form:", values);
-  };
+    console.log(values);
+    };
   const addUtility = () => {
     setUtilities([...utilities, {}]);
   };
@@ -114,7 +116,7 @@ export default function Utility() {
     const newImageFileLists = [...fileList];
     newImageFileLists.splice(index, 1);
     setFileList(newImageFileLists);
-
+    
     form.setFieldsValue({
       utilities: fileList.map((file) => ({
         image: file && file.length > 0 ? file[0].originFileObj : null,
@@ -135,6 +137,22 @@ export default function Utility() {
     fetchUtilityData();
   }, []);
 
+  const data = useContext(HouseContext);
+  const currentUtilities = form.getFieldValue("utilities");
+  form.setFieldsValue({
+    utilities: utilities.map((item, index) => {   
+        
+        return {
+          ...currentUtilities[index],
+          houseID: data.houseID,
+        };
+      })
+  });
+  
+
+    
+  console.log(data);
+
   return (
     <div className="utilities mb-2">
       <Form {...formItemLayout} form={form} onFinish={onFinish}>
@@ -149,7 +167,7 @@ export default function Utility() {
               hidden
             ></Form.Item>
             <Form.Item
-              name={["utilities", index, "type"]}
+              name={["utilities", index, "utility_id"]}
               label="Kiểu tiện ích"
               rules={[
                 {

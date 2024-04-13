@@ -2,7 +2,7 @@ import React from "react";
 import axios from "axios";
 import "react-slideshow-image/dist/styles.css";
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import {
   Form,
   Button,
@@ -51,7 +51,7 @@ export default function BasicInformation({ sendDataToParent }) {
   const [selectedDistrict, setSelectedDistrict] = useState();
   const [wards, setWards] = useState([]);
   const [selectedWard, setSelectedWard] = useState();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
@@ -129,10 +129,6 @@ export default function BasicInformation({ sendDataToParent }) {
       console.error("Error sending data to API:", error);
     }
   };
-
-  // useEffect(() => {
-  //   setSendData({ currenTab, houseID });
-  // }, [currenTab, houseID]);
 
   useEffect(() => {
     // Set dữ liệu cho sendData
