@@ -19,7 +19,6 @@ import { IoMdAddCircleOutline } from "react-icons/io";
 import { GrSubtractCircle } from "react-icons/gr";
 import { HouseContext } from "./index";
 
-
 const formItemLayout = {
   labelCol: {
     xs: {
@@ -101,10 +100,9 @@ export default function Utility() {
   );
 
   const [form] = Form.useForm();
+  const token = localStorage.getItem("token");
+  const data = useContext(HouseContext);
   const [utilities, setUtilities] = useState([{ image: null }]);
-  const onFinish = async (values) => {
-    console.log(values);
-    };
   const addUtility = () => {
     setUtilities([...utilities, {}]);
   };
@@ -116,7 +114,7 @@ export default function Utility() {
     const newImageFileLists = [...fileList];
     newImageFileLists.splice(index, 1);
     setFileList(newImageFileLists);
-    
+
     form.setFieldsValue({
       utilities: fileList.map((file) => ({
         image: file && file.length > 0 ? file[0].originFileObj : null,
@@ -137,21 +135,30 @@ export default function Utility() {
     fetchUtilityData();
   }, []);
 
-  const data = useContext(HouseContext);
-  const currentUtilities = form.getFieldValue("utilities");
-  form.setFieldsValue({
-    utilities: utilities.map((item, index) => {   
-        
-        return {
-          ...currentUtilities[index],
-          houseID: data.houseID,
-        };
-      })
-  });
-  
-
-    
   console.log(data);
+
+  const onFinish = async (values) => {
+    try {
+      const response = await axios.post(`${serveURL}utilities/store`, values, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      // Handle the response from the API as needed
+
+      if (response.status === 200) {
+        // Redirect to the tab utilities register page
+
+        navigate(`/house/${data.houseId}`);
+      }
+    } catch (error) {
+      // Handle errors
+      console.error("Error sending data to API:", error);
+    }
+    console.log(values);
+  };
 
   return (
     <div className="utilities mb-2">
@@ -165,7 +172,10 @@ export default function Utility() {
               name={["utilities", index, "houseID"]}
               label="House ID"
               hidden
-            ></Form.Item>
+              initialValue={data.houseID}
+            >
+              <Input />
+            </Form.Item>
             <Form.Item
               name={["utilities", index, "utility_id"]}
               label="Kiểu tiện ích"
