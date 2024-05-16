@@ -135,7 +135,7 @@ export default function Utility() {
     fetchUtilityData();
   }, []);
 
-  console.log(data);
+  console.log(data.houseID);
 
   const onFinish = async (values) => {
     try {
@@ -151,7 +151,7 @@ export default function Utility() {
       if (response.status === 200) {
         // Redirect to the tab utilities register page
 
-        navigate(`/house/${data.houseId}`);
+        navigate(`/house/${data.houseID}`);
       }
     } catch (error) {
       // Handle errors
