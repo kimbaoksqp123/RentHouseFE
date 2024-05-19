@@ -3,6 +3,7 @@ import Layout from "../views/layout";
 import Home from "../views/home";
 import PostDetail from "../views/post-detail";
 import PostRegister from "../views/post-register";
+import RequestViewHouse from "../views/request";
 import { createContext, useEffect, useState } from "react";
 import postApi from "../apis/postApi";
 import Login from "../views/auth/Login";
@@ -30,7 +31,7 @@ const AppRoutes = () => {
         ...filterCondition,
       });
       setListPost(res);
-      console.log(listPost);
+      // console.log(listPost);
       setIsSearchLoading(false);
     } catch (e) {
       setIsSearchLoading(false);
@@ -81,6 +82,7 @@ const AppRoutes = () => {
                   <Route path="/house/:postId" element={<PostDetail />} />
                   <Route path="/bookmarks" element={<Bookmark />} />
                   <Route path="/house_register" element={<PostRegister />} />
+                  <Route path="/house/:houseID/request_view_house/create" element={<RequestViewHouse />} />
                 </Routes>
               </Layout>
             </PostContext.Provider>
