@@ -106,7 +106,7 @@ export default function SavedListPost() {
               <div
                 className="fw-bold mt-2 cursor-pointer fs-18 fw-700 text-hover-main"
                 onClick={() => {
-                  navigate("/post/" + item.id);
+                  navigate("/house/" + item.id);
                 }}
               >
                 {item.title}

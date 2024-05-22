@@ -2,7 +2,7 @@ import React from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import "react-slideshow-image/dist/styles.css";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { Form, DatePicker, Space, Input, ConfigProvider } from "antd";
 
 import { serveURL } from "../../constants/index";

@@ -6,11 +6,13 @@ import { faPhone } from "@fortawesome/free-solid-svg-icons";
 import avatarImg from "../../assets/avatar.png";
 import CreateRequestViewHouse from "./create_request_view_house";
 
-
 export default function RequestViewHouse() {
   return (
     <div className="main-box">
       <div className="left-box">
+        <div className="d-flex align-items-center my-2 px-1">
+          <span className="fs-20 fw-700">Đăng ký xem phòng</span>
+        </div>
         <div className="create-view-house">
           <CreateRequestViewHouse />
         </div>
