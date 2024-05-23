@@ -53,7 +53,7 @@ export default function Login() {
             <Form.Group className="mt-2">
               <Form.Label className="fw-500">Mật khẩu</Form.Label>
               <Form.Control
-                type="text"
+                type="password"
                 {...register("password", { required: "Không được để trống" })}
                 isInvalid={errors.password}
               />
