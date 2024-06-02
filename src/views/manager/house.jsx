@@ -5,13 +5,39 @@ import { Table, Tag, Modal } from "antd";
 import moment from "moment";
 import { HomeOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
+import { ReloadOutlined } from "@ant-design/icons";
 
 export default function ManagerHouse() {
   const user = JSON.parse(localStorage.getItem("user"));
   const userID = user ? user.id : null;
   const [rentHouses, setRentHouses] = useState([]);
 
+  // useEffect(() => {
+  //   axios
+  //     .get(`${serveURL}posts/rent_house/index`, {
+  //       params: {
+  //         userID: userID,
+  //       },
+  //     })
+  //     .then((response) => {
+  //       setRentHouses(response.data);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching requests:", error);
+  //     });
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
+
+  // const handleRefresh = () => {
+  //   window.location.reload();
+  // };
+
   useEffect(() => {
+    fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Gọi fetchData() khi component được render lần đầu tiên
+
+  const fetchData = () => {
     axios
       .get(`${serveURL}posts/rent_house/index`, {
         params: {
@@ -24,9 +50,11 @@ export default function ManagerHouse() {
       .catch((error) => {
         console.error("Error fetching requests:", error);
       });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  };
 
+  const handleRefresh = () => {
+    fetchData(); // Gọi lại fetchData() khi bấm vào nút Refresh
+  };
   const getStatusColor = (status) => {
     switch (status) {
       case 1:
@@ -72,6 +100,8 @@ export default function ManagerHouse() {
     setIsModalVisible(true);
   };
 
+  
+
   useEffect(() => {
     if (action === "hiden") {
       setModalTitle("Bạn có chắc muốn ẩn phòng trọ");
@@ -91,16 +121,16 @@ export default function ManagerHouse() {
   const handleModalAcction = () => {
     const url = `${serveURL}posts/${currentHouseId}/${action}`;
     // console.log(url);
-      axios
-        .post(url, { id: currentHouseId, action: action })
-        .then((response) => {
-          setIsModalVisible(false);
-          // Refresh the request list or handle state update here
-        })
-        .catch((error) => {
-          console.error(`Error accepting request:`, error);
-          setIsModalVisible(false);
-        });
+    axios
+      .post(url, { id: currentHouseId, action: action })
+      .then((response) => {
+        setIsModalVisible(false);
+        // Refresh the request list or handle state update here
+      })
+      .catch((error) => {
+        console.error(`Error accepting request:`, error);
+        setIsModalVisible(false);
+      });
   };
 
   const columns = [
@@ -109,7 +139,7 @@ export default function ManagerHouse() {
       dataIndex: "address",
       width: "20%",
     },
-    
+
     {
       title: "Phường",
       dataIndex: "ward",
@@ -300,7 +330,19 @@ export default function ManagerHouse() {
   ];
   return (
     <div className="main">
-      <div className="main-box">
+      <div className="main-box flex flex-col" >
+        <div className="w-32 text-15" style={{ marginBottom: 16 }}>
+          <button
+            icon={<ReloadOutlined />}
+            key="refresh"
+            className="w-full border bg-green-100 border-green-500 text-green-500 py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            onClick={() => handleRefresh()}
+          >
+            Làm mới
+            <ReloadOutlined className="text-15 ml-2"/>
+          </button>
+          
+        </div>
         <Table
           columns={columns}
           dataSource={rentHouses}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./index.css";
 import "react-slideshow-image/dist/styles.css";
 
@@ -8,32 +8,41 @@ import {
   UserOutlined,
   VideoCameraOutlined,
 } from "@ant-design/icons";
-import { Layout, Menu, } from "antd";
+import { Layout, Menu } from "antd";
 import ManagerRequestViewHouse from "./request_view_house";
 import ManagerHouse from "./house";
-const {  Content, Sider, } = Layout;
+const { Content, Sider } = Layout;
 
 export default function Manager() {
   const [collapsed, setCollapsed] = useState(false);
-  const [selectedItem, setSelectedItem] = useState("1");
+  const [selectedItem, setSelectedItem] = useState(
+    sessionStorage.getItem("selectedItem") || "1"
+  );
+
+  useEffect(() => {
+    // Lưu giá trị của selectedItem vào session storage
+    sessionStorage.setItem("selectedItem", selectedItem);
+  }, [selectedItem]);
+
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);
   };
+
   const renderContent = () => {
     switch (selectedItem) {
-      // case "1":
-      //   return <AccountManagement />;
+      case "1":
+        return <p>Quản lý tài khoản</p>;
       case "2":
         return <ManagerHouse />;
       case "3":
         return <ManagerRequestViewHouse />;
-      // case "4":
-      //   return <ContractManagement />;
+      case "4":
+        return <p>Quản lý hợp đồng</p>;
       default:
         return null;
     }
   };
- 
+
   return (
     <div className="main-box">
       <Layout hasSider>
@@ -58,6 +67,7 @@ export default function Manager() {
             defaultSelectedKeys={["1"]}
             inlineCollapsed={collapsed}
             onSelect={({ key }) => setSelectedItem(key)}
+            selectedKeys={[selectedItem]}
           >
             <Menu.Item key="1" icon={<UserOutlined />}>
               Quản lý tài khoản
@@ -74,12 +84,6 @@ export default function Manager() {
           </Menu>
         </Sider>
         <Layout style={{ marginLeft: collapsed ? 80 : 200 }}>
-          {/* <Header
-            style={{
-              padding: 0,
-              background: colorBgContainer,
-            }}
-          ></Header> */}
           <Content
             style={{
               margin: "24px 16px 0",
