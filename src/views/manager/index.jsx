@@ -10,6 +10,7 @@ import {
 } from "@ant-design/icons";
 import { Layout, Menu, } from "antd";
 import ManagerRequestViewHouse from "./request_view_house";
+import ManagerHouse from "./house";
 const {  Content, Sider, } = Layout;
 
 export default function Manager() {
@@ -22,8 +23,8 @@ export default function Manager() {
     switch (selectedItem) {
       // case "1":
       //   return <AccountManagement />;
-      // case "2":
-      //   return <RoomManagement />;
+      case "2":
+        return <ManagerHouse />;
       case "3":
         return <ManagerRequestViewHouse />;
       // case "4":

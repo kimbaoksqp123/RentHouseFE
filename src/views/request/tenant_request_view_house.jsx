@@ -18,6 +18,7 @@ export default function TenantRequestViewHouse() {
           userID: userID,
         },
       })
+
       .then((response) => {
         setTenantRequests(response.data);
       })
@@ -37,8 +38,8 @@ export default function TenantRequestViewHouse() {
         return "error";
       case 4:
         return "red";
-        case 5:
-          return "yellow";  
+      case 5:
+        return "yellow";
       default:
         return "default"; // Trạng thái mặc định nếu không khớp
     }
@@ -54,7 +55,7 @@ export default function TenantRequestViewHouse() {
         return "Từ chối";
       case 4:
         return "Đã xóa";
-        case 5:
+      case 5:
         return "Đã hủy";
       default:
         return "Không xác định"; // Văn bản mặc định nếu không khớp
@@ -84,8 +85,7 @@ export default function TenantRequestViewHouse() {
       setModalTitle("Từ chối lịch hẹn");
     } else if (action === "delete") {
       setModalTitle("Bạn có chắc muốn xóa lịch hẹn?");
-    }
-    else if (action === "cancel") {
+    } else if (action === "cancel") {
       setModalTitle("Bạn có chắc muốn hủy lịch hẹn?");
     }
   }, [action]);
@@ -307,7 +307,7 @@ export default function TenantRequestViewHouse() {
         okText="Xác nhận"
         cancelText="Hủy bỏ"
       >
-         {action !== "delete" && (
+        {action !== "delete" && (
           <>
             <p>Nhập lời nhắn của bạn tới khách hàng:</p>
             <Input.TextArea

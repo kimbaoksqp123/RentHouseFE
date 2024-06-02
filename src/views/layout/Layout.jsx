@@ -30,8 +30,8 @@ export default function Layout({ children }) {
     window.location.href = "/";
   };
 
-  const handleRequestViewHouse = () => {
-    navigate(`/${userId}/manager/request_view_house`);
+  const handleManager = () => {
+    navigate(`/${userId}/manager`);
   };
 
   const handleSelectApartType = (type) => {
@@ -151,8 +151,8 @@ export default function Layout({ children }) {
                 <Dropdown.Item className="fs-14 fw-500 bg-blue-500 hover:bg-blue-700" onClick={handleLogout}>
                   Đăng xuất
                 </Dropdown.Item>
-                <Dropdown.Item className="fs-14 fw-500" onClick={ handleRequestViewHouse}>
-                  Yêu cầu xem trọ
+                <Dropdown.Item className="fs-14 fw-500" onClick={ handleManager}>
+                  Quản lý
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
