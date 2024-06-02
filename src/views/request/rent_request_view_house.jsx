@@ -284,6 +284,7 @@ export default function RentRequestViewHouse() {
         onCancel={handleModalCancel}
         okText="Xác nhận"
         cancelText="Hủy bỏ"
+        okButtonProps={{ className: 'bg-blue-500', style: { borderColor: 'blue' } }}
       >
         {action !== "delete" && (
           <>

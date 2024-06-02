@@ -6,35 +6,16 @@ import moment from "moment";
 import { HomeOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { ReloadOutlined } from "@ant-design/icons";
+import RefreshButton from "../../components/RefreshButton";
 
 export default function ManagerHouse() {
   const user = JSON.parse(localStorage.getItem("user"));
   const userID = user ? user.id : null;
   const [rentHouses, setRentHouses] = useState([]);
 
-  // useEffect(() => {
-  //   axios
-  //     .get(`${serveURL}posts/rent_house/index`, {
-  //       params: {
-  //         userID: userID,
-  //       },
-  //     })
-  //     .then((response) => {
-  //       setRentHouses(response.data);
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error fetching requests:", error);
-  //     });
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
-
-  // const handleRefresh = () => {
-  //   window.location.reload();
-  // };
-
   useEffect(() => {
     fetchData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Gọi fetchData() khi component được render lần đầu tiên
 
   const fetchData = () => {
@@ -99,8 +80,6 @@ export default function ManagerHouse() {
     setAction(action);
     setIsModalVisible(true);
   };
-
-  
 
   useEffect(() => {
     if (action === "hiden") {
@@ -330,19 +309,8 @@ export default function ManagerHouse() {
   ];
   return (
     <div className="main">
-      <div className="main-box flex flex-col" >
-        <div className="w-32 text-15" style={{ marginBottom: 16 }}>
-          <button
-            icon={<ReloadOutlined />}
-            key="refresh"
-            className="w-full border bg-green-100 border-green-500 text-green-500 py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            onClick={() => handleRefresh()}
-          >
-            Làm mới
-            <ReloadOutlined className="text-15 ml-2"/>
-          </button>
-          
-        </div>
+      <div className="main-box flex flex-col">
+        <RefreshButton handleRefresh={handleRefresh} />
         <Table
           columns={columns}
           dataSource={rentHouses}
@@ -362,6 +330,7 @@ export default function ManagerHouse() {
           onCancel={handleModalCancel}
           okText="Xác nhận"
           cancelText="Hủy bỏ"
+          okButtonProps={{ className: 'bg-blue-500', style: { borderColor: 'blue' } }}
         ></Modal>
       </div>
     </div>
