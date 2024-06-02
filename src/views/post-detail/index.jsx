@@ -28,6 +28,8 @@ import Mcomment from "./mComment";
 import { PostContext } from "../../routes";
 import userApi from "../../apis/userApi";
 import { toast } from "react-toastify";
+import { Button } from "antd";
+import { WhatsAppOutlined } from "@ant-design/icons";
 
 const sliderButtonStyle = {
   display: "flex",
@@ -147,15 +149,25 @@ export default function PostDetail() {
             >
               {postDetail.title}
             </p>
-            <p
-              style={{
-                fontSize: "12px",
-                fontWeight: "500",
-              }}
-            >
-              Đã đăng vào {dayjs(postDetail.created_at).format("HH:ss")} ngày{" "}
-              {dayjs(postDetail.created_at).format("DD/MM/YYYY")}
-            </p>
+            <div className="flex items-center space-x-4">
+              <p
+                className="text-xs font-medium flex items-center  h-full"
+                style={{
+                  fontSize: "12px",
+                  fontWeight: "500",
+                }}
+              >
+                Đã đăng vào {dayjs(postDetail.created_at).format("HH:ss")} ngày{" "}
+                {dayjs(postDetail.created_at).format("DD/MM/YYYY")}
+              </p>
+              <Button
+                icon={<WhatsAppOutlined />}
+                onClick={() => navigate("/house/" + postId + "/request_view_house/create")}
+              >
+                Đặt lịch xem phòng
+              </Button>
+            </div>
+
             <div className="d-flex mt-2 mx-3">
               <div className="d-flex fw-bold text-danger">
                 {postDetail.price / 1000000} triệu/tháng
@@ -280,7 +292,7 @@ export default function PostDetail() {
                   className="hot-news"
                   key={item.id}
                   onClick={() => {
-                    navigate("/post/" + item.id);
+                    navigate("/house/" + item.id);
                   }}
                 >
                   <img
@@ -336,7 +348,7 @@ export default function PostDetail() {
                   className="hot-news"
                   key={item.id}
                   onClick={() => {
-                    navigate("/post/" + item.id);
+                    navigate("/house/" + item.id);
                   }}
                 >
                   <img

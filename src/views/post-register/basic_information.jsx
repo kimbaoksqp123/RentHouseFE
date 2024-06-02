@@ -5,7 +5,6 @@ import { useState, useEffect } from "react";
 // import { useNavigate } from "react-router-dom";
 import {
   Form,
-  Button,
   Upload,
   Modal,
   Space,
@@ -133,7 +132,7 @@ export default function BasicInformation({ sendDataToParent }) {
   useEffect(() => {
     // Set dữ liệu cho sendData
     sendDataToParent({ currenTab, houseID });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currenTab, houseID]);
 
   const handleDistrictChange = (value, district) => {
@@ -164,212 +163,209 @@ export default function BasicInformation({ sendDataToParent }) {
   };
 
   return (
-    
-      <div className="basic_information">
-        <Form {...formItemLayout} form={form} onFinish={onFinish}>
-          <Form.Item name="userID" label="User ID" hidden></Form.Item>
-          <Form.Item
-            name="type"
-            label="Kiểu nhà trọ"
-            rules={[
-              {
-                required: true,
-                message: "Hãy chọn kiểu phòng trọ",
-              },
-            ]}
-          >
-            <Select placeholder="Chọn kiểu trọ">
-              <Select.Option value="1">Phòng trọ</Select.Option>
-              <Select.Option value="2">Nhà nguyên căn</Select.Option>
-              <Select.Option value="3">Chung cư Mini</Select.Option>
-            </Select>
-          </Form.Item>
-          <Form.Item
-            name="title"
-            label="Tiêu đề"
-            rules={[
-              {
-                required: true,
-                message: "Hãy nhập tiêu đề phòng trọ",
-              },
-            ]}
-          >
-            <Input placeholder="Nhập tiêu đề phòng trọ"></Input>
-          </Form.Item>
+    <div className="basic_information">
+      <Form {...formItemLayout} form={form} onFinish={onFinish}>
+        <Form.Item name="userID" label="User ID" hidden></Form.Item>
+        <Form.Item
+          name="type"
+          label="Kiểu nhà trọ"
+          rules={[
+            {
+              required: true,
+              message: "Hãy chọn kiểu phòng trọ",
+            },
+          ]}
+        >
+          <Select placeholder="Chọn kiểu trọ">
+            <Select.Option value="1">Phòng trọ</Select.Option>
+            <Select.Option value="2">Nhà nguyên căn</Select.Option>
+            <Select.Option value="3">Chung cư Mini</Select.Option>
+          </Select>
+        </Form.Item>
+        <Form.Item
+          name="title"
+          label="Tiêu đề"
+          rules={[
+            {
+              required: true,
+              message: "Hãy nhập tiêu đề phòng trọ",
+            },
+          ]}
+        >
+          <Input placeholder="Nhập tiêu đề phòng trọ"></Input>
+        </Form.Item>
 
-          <Form.Item
-            name="district"
-            label="Quận/Huyện"
-            rules={[
-              {
-                required: true,
-                message: "Hãy chọn quận/huyện",
-              },
-            ]}
+        <Form.Item
+          name="district"
+          label="Quận/Huyện"
+          rules={[
+            {
+              required: true,
+              message: "Hãy chọn quận/huyện",
+            },
+          ]}
+        >
+          <Select placeholder="Quận/Huyện" onChange={handleDistrictChange}>
+            {locationList.map((location) => (
+              <Select.Option key={location.code} value={location.name}>
+                {location.name}
+              </Select.Option>
+            ))}
+          </Select>
+        </Form.Item>
+        <Form.Item
+          name="ward"
+          label="Phường/Xã"
+          rules={[
+            {
+              required: true,
+              message: "Hãy chọn Phường/Xã",
+            },
+          ]}
+        >
+          <Select
+            id="ward"
+            placeholder="Chọn Phường/Xã"
+            onChange={handleWardChange}
+            value={selectedWard}
           >
-            <Select placeholder="Quận/Huyện" onChange={handleDistrictChange}>
-              {locationList.map((location) => (
-                <Select.Option key={location.code} value={location.name}>
-                  {location.name}
-                </Select.Option>
-              ))}
-            </Select>
-          </Form.Item>
-          <Form.Item
-            name="ward"
-            label="Phường/Xã"
-            rules={[
-              {
-                required: true,
-                message: "Hãy chọn Phường/Xã",
+            {wardArray.map((ward, index) => (
+              <Select.Option key={index} value={ward}>
+                {ward}
+              </Select.Option>
+            ))}
+          </Select>
+        </Form.Item>
+        <Form.Item
+          name="address"
+          label="Địa chỉ"
+          rules={[
+            {
+              required: true,
+              message: "Hãy nhập tên phòng trọ",
+            },
+          ]}
+        >
+          <Input placeholder="Nhập địa chỉ"></Input>
+        </Form.Item>
+        <Form.Item
+          name="land_area"
+          label="Diện tích"
+          rules={[
+            {
+              required: true,
+              message: "Hãy nhập diện tích",
+            },
+            {
+              type: "interger",
+              message: "Diện tích phải là chữ số",
+            },
+            {
+              validator: (_, value) => {
+                if (value > 0) {
+                  return Promise.resolve();
+                }
+                return Promise.reject("Diện tích phải lớn hơn 0!");
               },
-            ]}
-          >
-            <Select
-              id="ward"
-              placeholder="Chọn Phường/Xã"
-              onChange={handleWardChange}
-              value={selectedWard}
-            >
-              {wardArray.map((ward, index) => (
-                <Select.Option key={index} value={ward}>
-                  {ward}
-                </Select.Option>
-              ))}
-            </Select>
-          </Form.Item>
-          <Form.Item
-            name="address"
-            label="Địa chỉ"
-            rules={[
-              {
-                required: true,
-                message: "Hãy nhập tên phòng trọ",
+            },
+          ]}
+        >
+          <Input placeholder="Nhập diện tích"></Input>
+        </Form.Item>
+        <Form.Item
+          name="price"
+          label="Giá thuê(VNĐ)"
+          rules={[
+            {
+              type: "interger",
+              message: "Giá thuê là chữ số",
+            },
+            {
+              required: true,
+              message: "Hãy nhập Giá thuê!",
+            },
+            {
+              validator: (_, value) => {
+                if (value > 0) {
+                  return Promise.resolve();
+                }
+                return Promise.reject("Giá thuê phải lớn hơn 0!");
               },
-            ]}
-          >
-            <Input placeholder="Nhập địa chỉ"></Input>
-          </Form.Item>
-          <Form.Item
-            name="land_area"
-            label="Diện tích"
-            rules={[
-              {
-                required: true,
-                message: "Hãy nhập diện tích",
+            },
+          ]}
+        >
+          <Input placeholder="Nhập giá thuê"></Input>
+        </Form.Item>
+        <Form.Item
+          name="description"
+          label="Mô tả"
+          rules={[
+            {
+              required: true,
+              message: "Hãy nhập mô tả",
+            },
+          ]}
+        >
+          {/* <Input placeholder="Nhập mô tả"></Input> */}
+          <TextArea placeholder="Nhập mô tả" rows={4} />
+        </Form.Item>
+        <Form.Item
+          name="bedroom_num"
+          label="Số phòng ngủ"
+          rules={[
+            {
+              type: "interger",
+              message: "số phòng ngủ là chữ số",
+            },
+            {
+              required: true,
+              message: "Hãy nhập số phòng ngủ!",
+            },
+            {
+              validator: (_, value) => {
+                if (value >= 0) {
+                  return Promise.resolve();
+                }
+                return Promise.reject("số phòng ngủ phải lớn hơn 0!");
               },
-              {
-                type: "interger",
-                message: "Diện tích phải là chữ số",
+            },
+          ]}
+        >
+          <InputNumber
+            placeholder="Nhập số phòng ngủ"
+            min={0}
+            max={10}
+          />
+        </Form.Item>
+        <Form.Item
+          name="bathroom_num"
+          label="Số phòng tắm"
+          rules={[
+            {
+              type: "interger",
+              message: "Số phòng tắm là chữ số",
+            },
+            {
+              required: true,
+              message: "Hãy nhập Số phòng tắm!",
+            },
+            {
+              validator: (_, value) => {
+                if (value >= 0) {
+                  return Promise.resolve();
+                }
+                return Promise.reject("Số phòng tắm phải lớn hơn 0!");
               },
-              {
-                validator: (_, value) => {
-                  if (value > 0) {
-                    return Promise.resolve();
-                  }
-                  return Promise.reject("Diện tích phải lớn hơn 0!");
-                },
-              },
-            ]}
-          >
-            <Input placeholder="Nhập diện tích"></Input>
-          </Form.Item>
-          <Form.Item
-            name="price"
-            label="Giá thuê(VNĐ)"
-            rules={[
-              {
-                type: "interger",
-                message: "Giá thuê là chữ số",
-              },
-              {
-                required: true,
-                message: "Hãy nhập Giá thuê!",
-              },
-              {
-                validator: (_, value) => {
-                  if (value > 0) {
-                    return Promise.resolve();
-                  }
-                  return Promise.reject("Giá thuê phải lớn hơn 0!");
-                },
-              },
-            ]}
-          >
-            <Input placeholder="Nhập giá thuê"></Input>
-          </Form.Item>
-          <Form.Item
-            name="description"
-            label="Mô tả"
-            rules={[
-              {
-                required: true,
-                message: "Hãy nhập mô tả",
-              },
-            ]}
-          >
-            {/* <Input placeholder="Nhập mô tả"></Input> */}
-            <TextArea placeholder="Nhập mô tả" rows={4} />
-          </Form.Item>
-          <Form.Item
-            name="bedroom_num"
-            label="Số phòng ngủ"
-            rules={[
-              {
-                type: "interger",
-                message: "số phòng ngủ là chữ số",
-              },
-              {
-                required: true,
-                message: "Hãy nhập số phòng ngủ!",
-              },
-              {
-                validator: (_, value) => {
-                  if (value > 0) {
-                    return Promise.resolve();
-                  }
-                  return Promise.reject("số phòng ngủ phải lớn hơn 0!");
-                },
-              },
-            ]}
-          >
-            <InputNumber
-              placeholder="Nhập số phòng ngủ"
-              min={1}
-              max={10}
-              defaultValue={1}
-            />
-          </Form.Item>
-          <Form.Item
-            name="bathroom_num"
-            label="Số phòng tắm"
-            rules={[
-              {
-                type: "interger",
-                message: "Số phòng tắm là chữ số",
-              },
-              {
-                required: true,
-                message: "Hãy nhập Số phòng tắm!",
-              },
-              {
-                validator: (_, value) => {
-                  if (value > 0) {
-                    return Promise.resolve();
-                  }
-                  return Promise.reject("Số phòng tắm phải lớn hơn 0!");
-                },
-              },
-            ]}
-          >
-            <InputNumber
-              placeholder="Nhập Số phòng tắm"
-              min={1}
-              max={10}
-              defaultValue={1}
-            />
-          </Form.Item>
-          {/* <Form.Item name="image" label="Upload" valuePropName="image">
+            },
+          ]}
+        >
+          <InputNumber
+            placeholder="Nhập Số phòng tắm"
+            min={0}
+            max={10}
+          />
+        </Form.Item>
+        {/* <Form.Item name="image" label="Upload" valuePropName="image">
           <Upload
             action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
             listType="picture-card"
@@ -394,46 +390,46 @@ export default function BasicInformation({ sendDataToParent }) {
             />
           </Modal>
         </Form.Item> */}
-          <Form.Item
-            name="imageAlbum"
-            label="Album ảnh"
-            valuePropName="imageAlbum"
+        <Form.Item
+          name="imageAlbum"
+          label="Album ảnh"
+          valuePropName="imageAlbum"
+        >
+          <Upload
+            action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
+            listType="picture-card"
+            fileList={imageAlbum}
+            onPreview={handlePreview}
+            onChange={handleImageAlbum}
           >
-            <Upload
-              action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
-              listType="picture-card"
-              fileList={imageAlbum}
-              onPreview={handlePreview}
-              onChange={handleImageAlbum}
-            >
-              {imageAlbum.length >= 10 ? null : uploadButton}
-            </Upload>
-            <Modal
-              open={previewOpen}
-              title={previewTitle}
-              footer={null}
-              onCancel={handleCancel}
-            >
-              <img alt="example" style={{ width: "100%" }} src={previewImage} />
-            </Modal>
-          </Form.Item>
-          <Form.Item
-            wrapperCol={{
-              span: 12,
-              offset: 10,
-            }}
+            {imageAlbum.length >= 10 ? null : uploadButton}
+          </Upload>
+          <Modal
+            open={previewOpen}
+            title={previewTitle}
+            footer={null}
+            onCancel={handleCancel}
           >
-            <Space>
-              <Button
-                className="bg-green-500 hover:bg-green-600 text-white py-2 px-2.5 rounded"
-                htmlType="submit"
-                size="large"
-              >
-                Tiếp theo
-              </Button>
-            </Space>
-          </Form.Item>
-        </Form>
-      </div>
+            <img alt="example" style={{ width: "100%" }} src={previewImage} />
+          </Modal>
+        </Form.Item>
+        <Form.Item
+          wrapperCol={{
+            span: 12,
+            offset: 10,
+          }}
+        >
+          <Space>
+            <button
+              className="bg-green-500 hover:bg-green-600 text-white py-2 px-2.5 rounded"
+              type="submit"
+              style={{ fontSize: "large" }}
+            >
+              Tiếp theo
+            </button>
+          </Space>
+        </Form.Item>
+      </Form>
+    </div>
   );
 }

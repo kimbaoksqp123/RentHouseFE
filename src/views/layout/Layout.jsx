@@ -27,8 +27,11 @@ export default function Layout({ children }) {
   const handleLogout = () => {
     setIsAuth(false);
     localStorage.removeItem("user");
-    if (window.location.pathname === "/bookmarks") window.location.href = "/";
-    else window.location.reload();
+    window.location.href = "/";
+  };
+
+  const handleManager = () => {
+    navigate(`/${userId}/manager`);
   };
 
   const handleSelectApartType = (type) => {
@@ -48,6 +51,14 @@ export default function Layout({ children }) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const userId = JSON.parse(localStorage.getItem("user"))?.id;
+  const handleLinkClick = (e) => {
+    if (!userId) {
+      e.preventDefault();
+      toast.warn('Bạn cần đăng nhập để đăng tin mới!');
+    }
+  };
 
   return (
     <>
@@ -137,13 +148,16 @@ export default function Layout({ children }) {
                 <span className="fs-14 fw-600">{user.name}</span>
               </Dropdown.Toggle>
               <Dropdown.Menu>
-                <Dropdown.Item className="fs-14 fw-500" onClick={handleLogout}>
+                <Dropdown.Item className="fs-14 fw-500 bg-blue-500 hover:bg-blue-700" onClick={handleLogout}>
                   Đăng xuất
+                </Dropdown.Item>
+                <Dropdown.Item className="fs-14 fw-500" onClick={ handleManager}>
+                  Quản lý
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
           )}
-          <Link to="/house_register" className={btnStyle + " nav-link"}>
+          <Link to="/house_register" className={btnStyle + " nav-link"} onClick={handleLinkClick}>
             <Button className={`${btnStyle}`}>
               <span className="text-base font-medium">
                 <IoMdAdd className="inline-block mr-2" /> Đăng tin mới

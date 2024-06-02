@@ -2,16 +2,14 @@ import { IBadroom, IBedroom } from "../../common/icons";
 import { useNavigate } from "react-router-dom";
 import { sortTypes } from "../../constants";
 import Form from "react-bootstrap/Form";
-import Stack from "react-bootstrap/Stack";
-import Button from "react-bootstrap/Button";
 import { LuDot } from "react-icons/lu";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import dayjs from "dayjs";
 import { useContext, useEffect, useState } from "react";
-import clsx from "clsx";
 import userApi from "../../apis/userApi";
 import { PostContext } from "../../routes";
 import { toast } from "react-toastify";
+import { Pagination } from 'antd';
 
 export default function ListPost() {
   const {
@@ -27,27 +25,17 @@ export default function ListPost() {
   } = useContext(PostContext);
   let navigate = useNavigate();
   const perPage = 3;
-  const pageNum = Math.ceil(listPost.length / perPage);
   const [curPageStartIndex, setCurPageStartIndex] = useState(0);
   const user_id = JSON.parse(localStorage.getItem("user"))?.id;
 
-  const handleRedirectPage = (type, index) => {
-    if (type === "BACK") {
-      if (curPage > 1) {
-        setCurPage(curPage - 1);
-      }
-    } else if (type === "NEXT") {
-      if (curPage < pageNum) {
-        setCurPage(curPage + 1);
-      }
-    } else {
-      setCurPage(index + 1);
-    }
-    //scroll to top
+  const handleRedirectPage = (page) => {
+    setCurPage(page);
+    // scroll to top
     const offset = 220;
     document.body.scrollTop = offset; // For Safari
     document.documentElement.scrollTop = offset; // For Chrome, Firefox, IE and Opera
   };
+
   const handleSave = async (post_id) => {
     if (!user_id) toast.warn("Vui lòng đăng nhập!");
     else {
@@ -62,6 +50,7 @@ export default function ListPost() {
       setListPost(temp);
     }
   };
+
   const handleRemoveSaved = async (post_id) => {
     await userApi.deleteBm(user_id, post_id);
     toast.success("Đã bỏ lưu khỏi mục Yêu thích!");
@@ -77,6 +66,7 @@ export default function ListPost() {
   useEffect(() => {
     setCurPageStartIndex((curPage - 1) * perPage);
   }, [curPage]);
+
   useEffect(() => {
     setCurPage(1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -214,7 +204,6 @@ export default function ListPost() {
                 )}
               </div>
               
-
               <div className="mt-2 fw-600">Địa chỉ: {item.address}</div>
               <div className="text-sm fw-500">
                 Đã đăng vào {dayjs(item.created_at).format("HH:ss")} ngày{" "}
@@ -227,35 +216,14 @@ export default function ListPost() {
         <h4>Không có bài đăng nào phù hợp!</h4>
       )}
       {listPost.length > 0 && (
-        <Stack direction="horizontal" className="justify-content-end">
-          <Button
-            variant=""
-            onClick={() => handleRedirectPage("BACK", 0)}
-            className="me-2 border-2 fw-bold"
-          >
-            {"<"}
-          </Button>
-          {Array.from({ length: pageNum }, (_, index) => (
-            <Button
-              variant=""
-              key={index}
-              className={clsx(
-                "me-2 border-2 fw-bold",
-                curPage === index + 1 && "border-primary"
-              )}
-              onClick={() => handleRedirectPage("", index)}
-            >
-              {index + 1}
-            </Button>
-          ))}
-          <Button
-            variant=""
-            className="border-2 fw-bold"
-            onClick={() => handleRedirectPage("NEXT", 0)}
-          >
-            {">"}
-          </Button>
-        </Stack>
+        <Pagination
+          total={listPost.length}
+          pageSize={perPage}
+          current={curPage}
+          onChange={handleRedirectPage}
+          showSizeChanger={false}
+          className="flex justify-center mt-4"
+        />
       )}
     </>
   );
