@@ -5,6 +5,7 @@ import { Table, Tag, message, Modal, Input } from "antd";
 import moment from "moment";
 import { HomeOutlined, UserOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
+import RefreshButton from "../../components/RefreshButton";
 
 export default function TenantRequestViewHouse() {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -12,21 +13,29 @@ export default function TenantRequestViewHouse() {
   const [tenantRequests, setTenantRequests] = useState([]);
 
   useEffect(() => {
-    axios
-      .get(`${serveURL}request_view_houses/tenant_request/index`, {
-        params: {
-          userID: userID,
-        },
-      })
+    fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Gọi fetchData() khi component được render lần đầu tiên
 
-      .then((response) => {
-        setTenantRequests(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching requests:", error);
-      });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const fetchData = () => {
+    axios
+    .get(`${serveURL}request_view_houses/tenant_request/index`, {
+      params: {
+        userID: userID,
+      },
+    })
+
+    .then((response) => {
+      setTenantRequests(response.data);
+    })
+    .catch((error) => {
+      console.error("Error fetching requests:", error);
+    });
+  };
+
+  const handleRefresh = () => {
+    fetchData(); // Gọi lại fetchData() khi bấm vào nút Refresh
+  };
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -286,7 +295,8 @@ export default function TenantRequestViewHouse() {
   ];
 
   return (
-    <div className="main-box">
+    <div className="main-box flex flex-col">
+      <RefreshButton handleRefresh={handleRefresh}/>
       <Table
         columns={columns}
         dataSource={tenantRequests}

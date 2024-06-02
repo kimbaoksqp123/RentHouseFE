@@ -3,14 +3,20 @@ import axios from "axios";
 import { serveURL } from "../../constants/index";
 import { Table, Tag, message, Modal, Input } from "antd";
 import moment from "moment";
-import { HomeOutlined, UserOutlined } from "@ant-design/icons";
+import { HomeOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
+import RefreshButton from "../../components/RefreshButton";
+
 export default function RentRequestViewHouse() {
   const user = JSON.parse(localStorage.getItem("user"));
   const userID = user ? user.id : null;
   const [rentRequests, setRentRequests] = useState([]);
 
   useEffect(() => {
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Gọi fetchData() khi component được render lần đầu tiên
+  const fetchData = () => {
     axios
       .get(`${serveURL}request_view_houses/rent_request/index`, {
         params: {
@@ -23,8 +29,11 @@ export default function RentRequestViewHouse() {
       .catch((error) => {
         console.error("Error fetching requests:", error);
       });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  };
+
+  const handleRefresh = () => {
+    fetchData(); // Gọi lại fetchData() khi bấm vào nút Refresh
+  };
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -254,7 +263,8 @@ export default function RentRequestViewHouse() {
   ];
 
   return (
-    <div className="main-box">
+    <div className="main-box flex flex-col">
+      <RefreshButton handleRefresh={handleRefresh}/>
       <Table
         columns={columns}
         dataSource={rentRequests}
