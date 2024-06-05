@@ -30,6 +30,7 @@ import userApi from "../../apis/userApi";
 import { toast } from "react-toastify";
 import { Button } from "antd";
 import { WhatsAppOutlined } from "@ant-design/icons";
+import { Carousel, Image } from "antd";
 
 const sliderButtonStyle = {
   display: "flex",
@@ -60,7 +61,7 @@ export default function PostDetail() {
   const { setCurNavOption } = useContext(PostContext);
   let navigate = useNavigate();
   const { postId } = useParams();
-  const [postDetail, setPostDetail] = useState([]);
+  const [postDetail, setPostDetail] = useState({});
   const [hotNews, setHotNews] = useState([]);
   const [similarNews, setSimilarNews] = useState([]);
   const userId = JSON.parse(localStorage.getItem("user"))?.id;
@@ -102,6 +103,7 @@ export default function PostDetail() {
     setCurNavOption("post-detail");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
   return postDetail ? (
     <div className="main-box">
       <div className="left-box">
@@ -133,7 +135,7 @@ export default function PostDetail() {
                         src={item.url}
                         alt={item.id}
                       ></img>
-                    </div>
+                    </div>            
                   );
                 })}
               </Slide>
@@ -162,7 +164,9 @@ export default function PostDetail() {
               </p>
               <Button
                 icon={<WhatsAppOutlined />}
-                onClick={() => navigate("/house/" + postId + "/request_view_house/create")}
+                onClick={() =>
+                  navigate("/house/" + postId + "/request_view_house/create")
+                }
               >
                 Đặt lịch xem phòng
               </Button>
@@ -240,7 +244,7 @@ export default function PostDetail() {
           </div>
           <div className="content">
             <div className="content-title">
-              <img alt="img" src={contactIcon}></img>
+              <img alt="img" src={addressIcon}></img>
               <p className="mb-0">Bản đồ</p>
             </div>
             <p
@@ -257,6 +261,31 @@ export default function PostDetail() {
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
             ></iframe>
+          </div>
+          <div className="content">
+            <div className="content-title">
+              <img alt="img" src={infoIcon}></img>
+              <p className="mb-0">Tiện ích</p>
+            </div>
+            <div className="content-utilities">
+              <Carousel dotPosition="bottom" arrows className="">
+                {postDetail.house_utilities?.map((utility, index) => (
+                  <div key={index} className="w-full">
+                    <div className="utility-img w-full flex justify-center bg-black">
+                      <Image width={300} height={200} src={utility.image} />
+                    </div>
+                    <div className="utility-info ml-4 mt-4">
+                      <p className="text-black text-sm font-medium py-2 px-2">
+                        Số lượng: {utility.quantity}
+                      </p>
+                      <p className="text-black text-sm font-medium py-2 px-2">
+                        Giá: {utility.price} VND/tháng
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </Carousel>
+            </div>
           </div>
         </div>
         {/* phan binh luan*/}
