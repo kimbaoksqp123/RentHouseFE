@@ -104,6 +104,16 @@ export default function CreateRequestViewHouse() {
                 required: true,
                 message: "Hãy chọn thời gian bạn tới xem phòng",
               },
+              {
+                validator: (_, value) => {
+                  if (value && dayjs(value).isAfter(dayjs())) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(
+                    "Thời gian phải sau thời điểm hiện tại"
+                  );
+                },
+              }
             ]}
           >
             <Space direction="vertical" size={14}>
