@@ -42,7 +42,7 @@ export default function Mcomment({ listCommentData, postId }) {
 
                     <div className="userInfo">
                         <img src={avatarImg} alt="anh" />
-                        <span className="txt-username">{user.username}</span>
+                        <span className="txt-username">{user.name}</span>
                     </div>
 
                     <TextareaAutosize type="text" className="input-content" placeholder="Something" value={userComment} onChange={(e) => { setUserComment(e.target.value) }} />

@@ -33,7 +33,7 @@ export default function OtherComment({ commentContent }) {
             <div className="userInfo">
                 <img src={avatarImg} alt="" />
                 <div>
-                    <span className="txt-username">{comment.user.username}</span>
+                    <span className="txt-username">{comment.user.name}</span>
                     <span className="txt-time">{comment.posted_time}</span>
                 </div>
             </div>
