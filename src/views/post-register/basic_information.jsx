@@ -335,6 +335,7 @@ export default function BasicInformation({ sendDataToParent }) {
             placeholder="Nhập số phòng ngủ"
             min={0}
             max={10}
+            className="w-40"
           />
         </Form.Item>
         <Form.Item
@@ -363,44 +364,31 @@ export default function BasicInformation({ sendDataToParent }) {
             placeholder="Nhập Số phòng tắm"
             min={0}
             max={10}
+            className="w-40"
           />
         </Form.Item>
-        {/* <Form.Item name="image" label="Upload" valuePropName="image">
-          <Upload
-            action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
-            listType="picture-card"
-            fileList={fileList}
-            onPreview={handlePreview}
-            onChange={handleChange}
-          >
-            {fileList.length >= 1 ? null : uploadButton}
-          </Upload>
-          <Modal
-            open={previewOpen}
-            title={previewTitle}
-            footer={null}
-            onCancel={handleCancel}
-          >
-            <img
-              alt="example"
-              style={{
-                width: "100%",
-              }}
-              src={previewImage}
-            />
-          </Modal>
-        </Form.Item> */}
         <Form.Item
           name="imageAlbum"
           label="Album ảnh"
           valuePropName="imageAlbum"
+          rules={[
+            ({ getFieldValue }) => ({
+              validator(_, value) {
+                if (value && value.length >= 4) {
+                  return Promise.resolve();
+                }
+                return Promise.reject(new Error('Vui lòng tải lên ít nhất 4 ảnh!'));
+              },
+            }),
+          ]}
         >
           <Upload
-            action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
+            accept="image/*"
             listType="picture-card"
             fileList={imageAlbum}
             onPreview={handlePreview}
             onChange={handleImageAlbum}
+            beforeUpload={() => false}
           >
             {imageAlbum.length >= 10 ? null : uploadButton}
           </Upload>
