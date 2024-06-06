@@ -34,9 +34,9 @@ export const areaFilter = [
     { min: 500, max: 0 },
 ];
 export const apartFilter = [
-    { name: "Phòng trọ", value: 0 },
-    { name: "Nhà nguyên căn", value: 1 },
-    { name: "Chung cư Mini", value: 2 },
+    { name: "Phòng trọ", value: 1 },
+    { name: "Nhà nguyên căn", value: 2 },
+    { name: "Chung cư Mini", value: 3 },
 ];
 export const districtList = [
     { id: 0, name: "Hai Bà Trưng" },
@@ -104,6 +104,6 @@ export const locationList = [{
 ];
 
 export const tabRegister = [
-    { id: 0, name: "Thông tin cơ bản", children: <BasicInformation/> },
-    { id: 1, name: "Tiện ích", children: <Utility/> },
+    { id: 0, name: "Thông tin cơ bản", children: < BasicInformation / > },
+    { id: 1, name: "Tiện ích", children: < Utility / > },
 ];
