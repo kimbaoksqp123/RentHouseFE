@@ -43,11 +43,11 @@ export default function Login() {
               <Form.Label className="fw-500">Tên đăng nhập</Form.Label>
               <Form.Control
                 type="text"
-                {...register("username", { required: "Không được để trống" })}
-                isInvalid={errors.username}
+                {...register("email", { required: "Không được để trống" })}
+                isInvalid={errors.email}
               />
               <Form.Control.Feedback type="invalid">
-                {errors.username?.message}
+                {errors.email?.message}
               </Form.Control.Feedback>
             </Form.Group>
             <Form.Group className="mt-2">
