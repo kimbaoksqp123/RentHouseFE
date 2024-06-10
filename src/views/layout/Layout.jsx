@@ -56,7 +56,7 @@ export default function Layout({ children }) {
   const handleLinkClick = (e) => {
     if (!userId) {
       e.preventDefault();
-      toast.warn('Bạn cần đăng nhập để đăng tin mới!');
+      toast.warn('Bạn cần đăng nhập để đăng phòng trọ!');
     }
   };
 
@@ -160,7 +160,7 @@ export default function Layout({ children }) {
           <Link to="/house_register" className={btnStyle + " nav-link"} onClick={handleLinkClick}>
             <Button className={`${btnStyle}`}>
               <span className="text-base font-medium">
-                <IoMdAdd className="inline-block mr-2" /> Đăng tin mới
+                <IoMdAdd className="inline-block mr-2" /> Đăng phòng trọ
               </span>
             </Button>
           </Link>

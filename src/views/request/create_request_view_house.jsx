@@ -4,7 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import "react-slideshow-image/dist/styles.css";
 import { useEffect } from "react";
 import { Form, DatePicker, Space, Input, ConfigProvider } from "antd";
-
+import { toast } from "react-toastify";
 import { serveURL } from "../../constants/index";
 
 import moment from "moment";
@@ -78,6 +78,9 @@ export default function CreateRequestViewHouse() {
       // Handle the response from the API as needed
 
       if (response.status === 200) {
+        // Show success message
+        toast.success("Đặt lịch thành công");
+
         // Redirect to the tab utilities register page
         navigate(`/house/${houseID}`);
       }
@@ -113,7 +116,7 @@ export default function CreateRequestViewHouse() {
                     "Thời gian phải sau thời điểm hiện tại"
                   );
                 },
-              }
+              },
             ]}
           >
             <Space direction="vertical" size={14}>

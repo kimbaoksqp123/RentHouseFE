@@ -5,13 +5,14 @@ import { Table, Tag, Modal } from "antd";
 import moment from "moment";
 import { HomeOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
-import { ReloadOutlined } from "@ant-design/icons";
 import RefreshButton from "../../components/RefreshButton";
+import { useNavigate } from 'react-router-dom';
 
 export default function ManagerHouse() {
   const user = JSON.parse(localStorage.getItem("user"));
   const userID = user ? user.id : null;
   const [rentHouses, setRentHouses] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchData();
@@ -98,6 +99,10 @@ export default function ManagerHouse() {
   };
 
   const handleModalAcction = () => {
+    if (action === 'edit') {
+      navigate(`/house/${currentHouseId}`);
+      return;
+    }
     const url = `${serveURL}posts/${currentHouseId}/${action}`;
     // console.log(url);
     axios

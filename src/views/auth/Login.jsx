@@ -13,7 +13,7 @@ export default function Login() {
   } = useForm();
   const [isLoading, setIsLoading] = useState(false);
   const [isFailed, setIsFailed] = useState(false);
-  
+
   const onSubmit = async (data) => {
     console.log("data::", data);
     try {
@@ -22,8 +22,8 @@ export default function Login() {
       const res = await userApi.login(data);
       setIsLoading(false);
       console.log("res::", res);
-      localStorage.setItem('user', JSON.stringify(res))
-      window.location.href = '/'
+      localStorage.setItem("user", JSON.stringify(res));
+      window.location.href = "/";
     } catch (e) {
       setIsLoading(false);
       setIsFailed(true);

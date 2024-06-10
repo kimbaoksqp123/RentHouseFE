@@ -313,7 +313,7 @@ export default function PostDetail() {
           </div>
         </div>
         <div className="box-border mt-4 ">
-          <p style={{ fontSize: "20px", fontWeight: "700" }}>Tin nổi bật</p>
+          <p style={{ fontSize: "20px", fontWeight: "700" }}>Phòng trọ nổi bật</p>
           {hotNews &&
             hotNews.map((item) => {
               return (

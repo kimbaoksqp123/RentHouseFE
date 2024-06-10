@@ -9,6 +9,7 @@ import { createContext, useEffect, useState } from "react";
 import postApi from "../apis/postApi";
 import Login from "../views/auth/Login";
 import Bookmark from "../views/bookmark";
+import Register from "../views/auth/Register";
 
 export const PostContext = createContext();
 
@@ -91,6 +92,7 @@ const AppRoutes = () => {
           }
         />
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
       </Routes>
     </BrowserRouter>
   );
