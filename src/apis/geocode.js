@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const getCoordinates = async(address) => {
-    const apiKey = 'qWgIXCLKCf0ZRBxKWgtqMpt78RJBhMAaVwSWPzsJ5fvgleY5rsQ9mRRRp97x75EO'; // Thay thế YOUR_API_KEY bằng API key của bạn
+    const apiKey = 'qWgIXCLKCf0ZRBxKWgtqMpt78RJBhMAaVwSWPzsJ5fvgleY5rsQ9mRRRp97x75EO';
     const normalizedAddress = address.trim().replace(/\s+/g, ' ');
     try {
         const response = await axios.get(`https://api.distancematrix.ai/maps/api/geocode/json?address=${encodeURIComponent(normalizedAddress)}&language=vi&key=${apiKey}`);

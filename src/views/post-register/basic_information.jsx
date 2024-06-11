@@ -174,7 +174,7 @@ export default function BasicInformation({ sendDataToParent }) {
     });
   }, [form, coordinates.lat, coordinates.lon]); 
 
-  console.log(coordinates.lat, coordinates.lon);
+  
 
  
 
