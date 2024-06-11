@@ -302,7 +302,7 @@ export default function PostDetail() {
         <div className="box-border owner-info">
           <img
             alt="img"
-            src={avatarImg}
+            src={postDetail.user?.avatar ? postDetail.user.avatar : avatarImg}
             className="mt-3"
             style={{ width: "100px", borderRadius: "50%" }}
           ></img>

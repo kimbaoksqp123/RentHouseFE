@@ -1,20 +1,11 @@
 import React from "react";
 import axios from "axios";
-import { useParams, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "react-slideshow-image/dist/styles.css";
-import { useEffect } from "react";
-import { Form, DatePicker, Space, Input, ConfigProvider } from "antd";
-
+import { Form, Space, Input, Modal, Upload } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
 import { serveURL } from "../../constants/index";
-
-import moment from "moment";
-import "moment/locale/vi"; // Import locale cho moment.js
-import locale from "antd/locale/vi_VN";
-import dayjs from "dayjs";
-import "dayjs/locale/vi";
-dayjs.locale("vi");
-
-const { TextArea } = Input;
 
 const formItemLayout = {
   labelCol: {
@@ -30,33 +21,60 @@ const formItemLayout = {
       span: 14,
     },
     sm: {
-      span: 24,
+      span: 21,
       offset: 1,
     },
   },
 };
 
+const getBase64 = (file) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (error) => reject(error);
+  });
+
 export default function Register() {
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem("user"));
-  const userID = user ? user.id : null;
-  const token = localStorage.getItem("token");
-  const { houseID } = useParams();
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState("");
+  const [previewTitle, setPreviewTitle] = useState("");
+  const [fileList, setFileList] = useState([]);
   const [form] = Form.useForm();
 
-  useEffect(() => {
-    // Set the initial values when the component mounts
-    form.setFieldsValue({
-      userID: userID,
-    });
-  }, [form, userID]); // Run the effect when form or userID changes
+  const handleCancel = () => setPreviewOpen(false);
+  const handlePreview = async (file) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj);
+    }
+    setPreviewImage(file.url || file.preview);
+    setPreviewOpen(true);
+    setPreviewTitle(
+      file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
+    );
+  };
 
-  useEffect(() => {
-    // Set the initial values when the component mounts
+  const handleImage = ({ fileList: newFileList }) => {
+    setFileList(newFileList);
     form.setFieldsValue({
-      houseID: parseInt(houseID),
+      avatar: newFileList.map((file) => file.originFileObj),
     });
-  }, [form, houseID]); // Run the effect when form or houseID changes
+  };
+
+  const uploadButton = (
+    <div>
+      <PlusOutlined />
+      <div
+        style={{
+          marginTop: 8,
+        }}
+      >
+        Thêm
+      </div>
+    </div>
+  );
+
 
   const onFinish = async (values) => {
     // Log the form data for testing purposes
@@ -65,12 +83,11 @@ export default function Register() {
     // You can send the form data to your API using Axios
     try {
       const response = await axios.post(
-        `${serveURL}request_view_houses/store`,
+        `${serveURL}register`,
         values,
         {
           headers: {
             "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -79,7 +96,7 @@ export default function Register() {
 
       if (response.status === 200) {
         // Redirect to the tab utilities register page
-        navigate(`/house/${houseID}`);
+        navigate(`/`);
       }
     } catch (error) {
       // Handle errors
@@ -87,85 +104,160 @@ export default function Register() {
     }
   };
 
-  // Thiết lập locale cho moment.js
-  moment.locale("vi");
-
   return (
     <div className="main flex flex-column justify-center align-items-center min-h-screen">
       <div className="header flex  justify-center align-items-center w-50 rounded border border-green-600 bg-white shadow p-2">
         <h4>Đăng ký tài khoản</h4>
       </div>
       <div className="create_request_view_house w-50 rounded border border-green-600 bg-white shadow p-2">
-        <ConfigProvider locale={locale}>
-          <Form {...formItemLayout} form={form} onFinish={onFinish}>
-            <Form.Item name="userID" label="User ID" hidden></Form.Item>
-            <Form.Item name="houseID" label="User ID" hidden></Form.Item>
-            <Form.Item
-              name="view_time"
-              label="Thời gian"
-              rules={[
-                {
-                  required: true,
-                  message: "Hãy chọn thời gian bạn tới xem phòng",
+        <Form {...formItemLayout} form={form} onFinish={onFinish}>
+          <Form.Item
+            name="name"
+            label="Họ và tên"
+            rules={[
+              {
+                required: true,
+                message: "Hãy nhập họ và tên của bạn",
+              },
+            ]}
+          >
+            <Input placeholder="Nhập họ tên"></Input>
+          </Form.Item>
+          <Form.Item
+            name="phone"
+            label="SDT"
+            rules={[
+              {
+                required: true,
+                message: "Hãy nhập số điện thoại của bạn",
+              },
+            ]}
+          >
+            <Input placeholder="Nhập số điện thoại"></Input>
+          </Form.Item>
+          <Form.Item
+            name="email"
+            label="Email"
+            rules={[
+              {
+                required: true,
+                message: "Hãy nhập địa chỉ email của bạn",
+              },
+            ]}
+          >
+            <Input placeholder="Nhập địa chỉ email"></Input>
+          </Form.Item>
+          <Form.Item
+            name="password"
+            label="Mật khẩu"
+            rules={[
+              {
+                required: true,
+                message: "Hãy nhập mật khẩu",
+              },
+              {
+                min: 6,
+                message: "Mật khẩu phải dài ít nhất 6 ký tự",
+              },
+            ]}
+          >
+            <Input placeholder="Nhập mật khẩu" type="password"></Input>
+          </Form.Item>
+          <Form.Item
+            name="password_confirm"
+            label="Xác nhận mật khẩu"
+            rules={[
+              {
+                required: true,
+                message: "Hãy nhập mật khẩu",
+              },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue("password") === value) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(
+                    new Error("Mật khẩu xác nhận chưa giống với mật khẩu")
+                  );
                 },
-                {
-                  validator: (_, value) => {
-                    if (value && dayjs(value).isAfter(dayjs())) {
-                      return Promise.resolve();
-                    }
-                    return Promise.reject(
-                      "Thời gian phải sau thời điểm hiện tại"
-                    );
-                  },
-                },
-              ]}
+              }),
+            ]}
+          >
+            <Input placeholder="Nhập mật khẩu xác nhận" type="password"></Input>
+          </Form.Item>
+          <Form.Item
+            name="address"
+            label="Địa chỉ"
+            rules={[
+              {
+                required: true,
+                message: "Hãy nhập địa chỉ của bạn",
+              },
+            ]}
+          >
+            <Input placeholder="Nhập địa chỉ"></Input>
+          </Form.Item>
+
+          <Form.Item
+            name="cccd_number"
+            label="CCCD"
+            rules={[
+              {
+                required: true,
+                message: "Hãy nhập số CCCD của bạn",
+              },
+            ]}
+          >
+            <Input placeholder="Nhập số CCCD"></Input>
+          </Form.Item>
+
+          <Form.Item
+              name="avatar"
+              label="Ảnh"
+              valuePropName="avatar"
             >
-              <Space direction="vertical" size={14}>
-                <DatePicker
-                  renderExtraFooter={() => ""}
-                  showTime
-                  format="DD/MM/YYYY HH:mm:ss"
-                  onChange={(value) => {
-                    if (value)
-                      form.setFieldValue(
-                        "view_time",
-                        dayjs(value).format("YYYY-MM-DD HH:mm:ss")
-                      );
+              <Upload
+                accept="image/*"
+                listType="picture-card"
+                fileList={fileList}
+                onPreview={handlePreview}
+                onChange={handleImage}
+                beforeUpload={() => false}
+              >
+                {fileList.length >= 1 ? null : uploadButton}
+              </Upload>
+              <Modal
+                open={previewOpen}
+                title={previewTitle}
+                footer={null}
+                onCancel={handleCancel}
+              >
+                <img
+                  alt="example"
+                  style={{
+                    width: "100%",
                   }}
+                  src={previewImage}
                 />
-              </Space>
+              </Modal>
             </Form.Item>
 
-            <Form.Item
-              name="tenant_message"
-              label="Lời nhắn"
-              rules={[
-                {
-                  required: true,
-                  message: "Hãy nhập lời nhắn tới chủ trọ",
-                },
-              ]}
-            >
-              <TextArea placeholder="Nhập mô tả" rows={4} />
-            </Form.Item>
-
-            <Form.Item
-              wrapperCol={{
-                span: 12,
-                offset: 10,
-              }}
-            >
-              <Space>
-                <button
-                  className="w-24 ml-2 bg-blue-500 hover:bg-blue-400 text-white py-2 px-2.5 rounded text-[16px]"
-                  type="submit"
-                >
-                  Đăng ký
-                </button>
-              </Space>
-            </Form.Item>
-          </Form>
-        </ConfigProvider>
+          <Form.Item
+            wrapperCol={{
+              span: 12,
+              offset: 10,
+            }}
+          >
+            <Space>
+              <button
+                className="w-24 ml-2 bg-blue-500 hover:bg-blue-400 text-white py-2 px-2.5 rounded text-[16px]"
+                type="submit"
+              >
+                Đăng ký
+              </button>
+            </Space>
+          </Form.Item>
+        </Form>
       </div>
     </div>
   );

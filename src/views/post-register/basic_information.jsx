@@ -242,7 +242,7 @@ export default function BasicInformation({ sendDataToParent }) {
           rules={[
             {
               required: true,
-              message: "Hãy nhập tên phòng trọ",
+              message: "Hãy nhập địa chỉ phòng trọ",
             },
           ]}
         >
