@@ -3,18 +3,11 @@ import axios from "axios";
 import "react-slideshow-image/dist/styles.css";
 import { useState, useEffect } from "react";
 // import { useNavigate } from "react-router-dom";
-import {
-  Form,
-  Upload,
-  Modal,
-  Space,
-  Input,
-  Select,
-  InputNumber,
-} from "antd";
+import { Form, Upload, Modal, Space, Input, Select, InputNumber } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { locationList } from "../../constants/locationList";
 import { serveURL } from "../../constants/index";
+import getCoordinates from '../../apis/geocode';
 
 const { TextArea } = Input;
 
@@ -101,6 +94,7 @@ export default function BasicInformation({ sendDataToParent }) {
     });
   }, [form, userID]); // Run the effect when form or userID changes
 
+
   const onFinish = async (values) => {
     // Log the form data for testing purposes
     console.log("Received values from form:", values);
@@ -157,6 +151,32 @@ export default function BasicInformation({ sendDataToParent }) {
   }, [selectedDistrict]);
 
   const wardArray = Object.values(wards);
+  const [address, setAddress] = useState("");
+  const [coordinates, setCoordinates] = useState({ lat: '', lon: '' });
+  const handleAddressChange = (e) => {
+    setAddress(e.target.value);
+  };
+
+  const handleGetCoordinates = async () => {
+    try {
+      const coords = await getCoordinates(address);
+      setCoordinates(coords);   
+    } catch (error) {
+      setCoordinates({ lat: '', lon: '' });
+    }
+  };
+
+  useEffect(() => {
+    // Set the initial values when the component mounts
+    form.setFieldsValue({
+      latitude: coordinates.lat,
+      longitude: coordinates.lon,
+    });
+  }, [form, coordinates.lat, coordinates.lon]); 
+
+  console.log(coordinates.lat, coordinates.lon);
+
+ 
 
   const handleWardChange = (value, ward) => {
     setSelectedWard(ward);
@@ -246,7 +266,12 @@ export default function BasicInformation({ sendDataToParent }) {
             },
           ]}
         >
-          <Input placeholder="Nhập địa chỉ"></Input>
+          <Input
+            placeholder="Nhập địa chỉ"
+            value={address}
+            onChange={handleAddressChange}
+            onBlur={handleGetCoordinates}
+          ></Input>
         </Form.Item>
         <Form.Item
           name="land_area"
@@ -377,7 +402,9 @@ export default function BasicInformation({ sendDataToParent }) {
                 if (value && value.length >= 4) {
                   return Promise.resolve();
                 }
-                return Promise.reject(new Error('Vui lòng tải lên ít nhất 4 ảnh!'));
+                return Promise.reject(
+                  new Error("Vui lòng tải lên ít nhất 4 ảnh!")
+                );
               },
             }),
           ]}
@@ -401,6 +428,8 @@ export default function BasicInformation({ sendDataToParent }) {
             <img alt="example" style={{ width: "100%" }} src={previewImage} />
           </Modal>
         </Form.Item>
+        <Form.Item name="latitude" label="Kinh độ" hidden></Form.Item>
+        <Form.Item name="longitude" label="Vĩ độ" hidden></Form.Item>
         <Form.Item
           wrapperCol={{
             span: 12,
