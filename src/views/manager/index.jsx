@@ -15,7 +15,7 @@ import ManagerAccount from "./account";
 const { Content, Sider } = Layout;
 
 export default function Manager() {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
   const [selectedItem, setSelectedItem] = useState(
     sessionStorage.getItem("selectedItem") || "1"
   );
