@@ -123,6 +123,7 @@ export default function RentRequestViewHouse() {
       title: "Phòng trọ",
       dataIndex: "house_id",
       width: "8%",
+      align: "center",
       render: (house_id) => (
         <Link to={`/house/${house_id}`}>
           <div className="flex items-center">
@@ -135,16 +136,21 @@ export default function RentRequestViewHouse() {
       title: "Lời nhắn của tôi",
       dataIndex: "tenant_message",
       width: "20%",
+      align: "center",
+
     },
     {
       title: "Lời nhắn chủ phòng",
       dataIndex: "rent_message",
       width: "20%",
+      align: "center",
+
     },
     {
       title: "Lịch hẹn",
       dataIndex: "view_time",
       width: "15%",
+
       sorter: (a, b) => moment(a.view_time).unix() - moment(b.view_time).unix(),
       render: (view_time) => {
         const formattedTime = moment(view_time).format("HH [giờ] mm [phút]");
@@ -209,6 +215,7 @@ export default function RentRequestViewHouse() {
       title: "Hành động",
       dataIndex: "status",
       width: "10%",
+      align: "center",
       render: (status, record) => {
         const { id } = record;
         const actions = [];

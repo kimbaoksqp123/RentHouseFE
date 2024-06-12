@@ -11,6 +11,7 @@ import {
 import { Layout, Menu } from "antd";
 import ManagerRequestViewHouse from "./request_view_house";
 import ManagerHouse from "./house";
+import ManagerAccount from "./account";
 const { Content, Sider } = Layout;
 
 export default function Manager() {
@@ -31,7 +32,7 @@ export default function Manager() {
   const renderContent = () => {
     switch (selectedItem) {
       case "1":
-        return <p>Quản lý tài khoản</p>;
+        return <ManagerAccount />;
       case "2":
         return <ManagerHouse />;
       case "3":

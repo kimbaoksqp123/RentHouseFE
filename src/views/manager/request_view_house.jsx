@@ -18,7 +18,7 @@ const items = [
 export default function ManagerRequestViewHouse() {
   return (
     <div className="main">
-      <Tabs type="card" defaultActiveKey="1" items={items} />;
+      <Tabs type="card" defaultActiveKey="1" items={items} />
     </div>
   );
 }

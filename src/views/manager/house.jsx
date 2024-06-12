@@ -122,17 +122,20 @@ export default function ManagerHouse() {
       title: "Địa chỉ",
       dataIndex: "address",
       width: "20%",
+      align: "center",
     },
 
     {
       title: "Phường",
       dataIndex: "ward",
       width: "8%",
+      align: "center",
     },
     {
       title: "Quận",
       dataIndex: "district",
       width: "10%",
+      align: "center",
     },
     {
       title: "Giá thuê",
@@ -159,6 +162,7 @@ export default function ManagerHouse() {
       title: "Trạng thái",
       dataIndex: "status",
       width: "10%",
+      align: "center",
       filters: [
         {
           text: "Trống",
@@ -190,6 +194,7 @@ export default function ManagerHouse() {
       title: "Lượt xem phòng",
       dataIndex: "view_number",
       width: "8%",
+      align: "center",
       sorter: (a, b) => a.view_number - b.view_number,
     },
     {
@@ -208,6 +213,7 @@ export default function ManagerHouse() {
       title: "Thời gian tạo",
       dataIndex: "created_at",
       width: "15%",
+      align: "center",
       sorter: (a, b) =>
         moment(a.created_at).unix() - moment(b.created_at).unix(),
       render: (created_at) => {
@@ -224,7 +230,8 @@ export default function ManagerHouse() {
     {
       title: "Chi tiết",
       dataIndex: "id",
-      width: "8%",
+      width: "5%",
+      align: "center",
       render: (id) => (
         <Link to={`/house/${id}`}>
           <div className="flex items-center">
@@ -237,6 +244,7 @@ export default function ManagerHouse() {
       title: "Hành động",
       dataIndex: "status",
       width: "10%",
+      align: "center",
       render: (status, record) => {
         const { id } = record;
         const actions = [];
@@ -317,6 +325,7 @@ export default function ManagerHouse() {
       <div className="main-box flex flex-col">
         <RefreshButton handleRefresh={handleRefresh} />
         <Table
+        className="mb-3"
           columns={columns}
           dataSource={rentHouses}
           bordered
@@ -326,6 +335,7 @@ export default function ManagerHouse() {
           showSorterTooltip={{
             target: "sorter-icon",
           }}
+          pagination={false}
         />
         <Modal
           title={modalTitle}
