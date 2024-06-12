@@ -30,7 +30,8 @@ export default function Layout({ children }) {
     window.location.href = "/";
   };
 
-  const handleManager = () => {
+  const handleManager = (selectedItem) => {
+    sessionStorage.setItem("selectedItem", selectedItem);
     navigate(`/${userId}/manager`);
   };
 
@@ -80,24 +81,6 @@ export default function Layout({ children }) {
           </div>
           {!isAuth ? (
             <>
-              {/* <Link to="login" className={btnStyle + " nav-link"}>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                >
-                  <path
-                    d="M2.3999 21.6L2.40031 17.9996C2.40053 16.0115 4.01224 14.4 6.00031 14.4H11.9999M19.0285 13.5L21.5999 15.9M21.5999 15.9L19.0285 18.3M21.5999 15.9H14.9999M14.3999 6C14.3999 7.98822 12.7881 9.6 10.7999 9.6C8.81167 9.6 7.1999 7.98822 7.1999 6C7.1999 4.01177 8.81167 2.4 10.7999 2.4C12.7881 2.4 14.3999 4.01177 14.3999 6Z"
-                    stroke="#4BA558"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-                <span className="fs-14 fw-500">Đăng nhập</span>
-              </Link> */}
               <Link
                 to="login"
                 className={`${btnStyle}  d-flex items-center gap-1 nav-link text-blue-500 `}
@@ -151,8 +134,17 @@ export default function Layout({ children }) {
                 <Dropdown.Item className="fs-14 fw-500 bg-blue-500 hover:bg-blue-700" onClick={handleLogout}>
                   Đăng xuất
                 </Dropdown.Item>
-                <Dropdown.Item className="fs-14 fw-500" onClick={ handleManager}>
-                  Quản lý
+                <Dropdown.Item className="fs-14 fw-500" onClick={() => handleManager(1)}>
+                  Quản lý tài khoản
+                </Dropdown.Item>
+                <Dropdown.Item className="fs-14 fw-500" onClick={() => handleManager(2)}>
+                  Quản lý phòng trọ
+                </Dropdown.Item>
+                <Dropdown.Item className="fs-14 fw-500" onClick={() => handleManager(3)}>
+                  Quản lý yêu cầu xem phòng
+                </Dropdown.Item>
+                <Dropdown.Item className="fs-14 fw-500" onClick={() => handleManager(4)}>
+                  Quản lý hợp đồng
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
