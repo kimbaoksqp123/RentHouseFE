@@ -10,6 +10,7 @@ import postApi from "../apis/postApi";
 import Login from "../views/auth/Login";
 import Bookmark from "../views/bookmark";
 import Register from "../views/auth/Register";
+import Contract from "../views/contract";
 
 export const PostContext = createContext();
 
@@ -86,6 +87,7 @@ const AppRoutes = () => {
                   <Route path="/house_register" element={<PostRegister />} />
                   <Route path="/house/:houseID/request_view_house/create" element={<RequestViewHouse />} />
                   <Route path="/:userID/manager" element={<Manager />} />
+                  <Route path="/:userID/contract/create" element={<Contract />} />
                 </Routes>
               </Layout>
             </PostContext.Provider>

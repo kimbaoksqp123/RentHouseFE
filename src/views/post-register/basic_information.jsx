@@ -7,7 +7,7 @@ import { Form, Upload, Modal, Space, Input, Select, InputNumber } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { locationList } from "../../constants/locationList";
 import { serveURL } from "../../constants/index";
-import getCoordinates from '../../apis/geocode';
+import getCoordinates from '../../apis/geocoding';
 
 const { TextArea } = Input;
 

@@ -19,15 +19,11 @@ export default function ListPost() {
     setSortType,
     curPage,
     setCurPage,
-    useRightFilter,
-    priceRangeRF,
-    areaRangeRF,
   } = useContext(PostContext);
   let navigate = useNavigate();
   const perPage = 3;
   const [curPageStartIndex, setCurPageStartIndex] = useState(0);
   const user_id = JSON.parse(localStorage.getItem("user"))?.id;
-
   const handleRedirectPage = (page) => {
     setCurPage(page);
     // scroll to top
@@ -76,38 +72,6 @@ export default function ListPost() {
     <>
       <div className="text-main fs-14 fw-500">
         Hiện có {listPost.length} kết quả
-        {useRightFilter && (
-          <div className="fst-italic d-inline fw-600">
-            &nbsp;
-            {priceRangeRF && (
-              <>
-                Giá cho thuê{" "}
-                {priceRangeRF.min === 0 && <span>dưới {priceRangeRF.max}</span>}
-                {priceRangeRF.max === 0 && <span>trên {priceRangeRF.min}</span>}
-                {priceRangeRF.min !== 0 && priceRangeRF.max !== 0 ? (
-                  <span>
-                    từ {priceRangeRF.min} đến {priceRangeRF.max}
-                  </span>
-                ) : null}
-                {" triệu"}
-              </>
-            )}
-            {areaRangeRF && (
-              <>
-                Diện tích{" "}
-                {areaRangeRF.min === 0 && <span>dưới {areaRangeRF.max}</span>}
-                {areaRangeRF.max === 0 && <span>trên {areaRangeRF.min}</span>}
-                {areaRangeRF.min !== 0 && areaRangeRF.max !== 0 ? (
-                  <span>
-                    từ {areaRangeRF.min} đến {areaRangeRF.max}
-                  </span>
-                ) : null}
-                {" m"}
-                {<sup>2</sup>}
-              </>
-            )}
-          </div>
-        )}
       </div>
       <Form className="mb-3">
         <Form.Group>

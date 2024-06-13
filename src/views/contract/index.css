@@ -1,0 +1,25 @@
+.main-box {
+    display: flex;
+    justify-content: center;
+    column-gap: 23px;
+    margin-top: 20px;
+}
+
+.left-box {
+    width: 840px;
+}
+
+.box-border {
+    border-radius: 5px;
+    border: 1px solid #4FAE5A;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    padding: 10px;
+}
+
+.create-contract {
+    border-radius: 5px;
+    border: 1px solid #4FAE5A;
+    background: #FFF;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    padding: 10px;
+}

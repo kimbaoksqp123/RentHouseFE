@@ -3,7 +3,7 @@ import Col from "react-bootstrap/Col";
 import "./pageStyle.css";
 import ListPost from "./ListPost";
 import RightFilter from "../../components/RightFilter";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect} from "react";
 import { PostContext } from "../../routes";
 
 export default function Home() {
@@ -29,7 +29,7 @@ export default function Home() {
         style={{ marginLeft: "10%", marginRight: "20%" }}
       >
         <Col className="" md={9}>
-          <ListPost />
+          <ListPost/>
         </Col>
         <Col className="md-down-collapse p-2" md={3}>
           <RightFilter marginTop="72px" />
