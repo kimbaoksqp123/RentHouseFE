@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "react-slideshow-image/dist/styles.css";
 import { useEffect, useState } from "react";
-import { Form, DatePicker, Space, Input, ConfigProvider, Upload } from "antd";
+import { Form, DatePicker, Space, Input, ConfigProvider, Upload, Button } from "antd";
 import { toast } from "react-toastify";
 import { serveURL } from "../../constants/index";
 import { getUserInfo } from "../../apis/getUser";
@@ -44,6 +44,7 @@ export default function CreateContract() {
   const tenantID = sessionStorage.getItem("tenantID");
   const houseID = sessionStorage.getItem("houseID");
   const [tenantInfo, setTenantInfo] = useState(null);
+  const [fileList, setFileList] = useState([]);
 
   useEffect(() => {
     const fetchTenantInfo = async () => {
@@ -74,14 +75,19 @@ export default function CreateContract() {
     });
   }, [form, houseID]);
   const onFinish = async (values) => {
-    // Log the form data for testing purposes
-    console.log("Received values from form:", values);
-
+    const formData = {
+      tenantID: values.tenantID,
+      houseID: values.houseID,
+      start_date: values.start_date,
+      end_date: values.end_date,
+      file: values.file,
+    };
+    console.log("Received values from form:", formData);
     // You can send the form data to your API using Axios
     try {
       const response = await axios.post(
-        `${serveURL}request_view_houses/store`,
-        values,
+        `${serveURL}contracts/store`,
+        formData,
         {
           headers: {
             "Content-Type": "multipart/form-data",
@@ -94,10 +100,10 @@ export default function CreateContract() {
 
       if (response.status === 200) {
         // Show success message
-        toast.success("Đặt lịch thành công");
+        toast.success("Tạo hợp đồng thành công");
 
         // Redirect to the tab utilities register page
-        navigate(`/house/${houseID}`);
+        navigate(`/`);
       }
     } catch (error) {
       // Handle errors
@@ -105,6 +111,18 @@ export default function CreateContract() {
     }
   };
 
+  const handleChange = ({ fileList }) => {
+    setFileList(fileList.slice(-1)); 
+  };
+
+  useEffect(() => {
+    if (fileList.length > 0) {
+      form.setFieldsValue({
+        file: fileList[0].originFileObj,
+      });
+    }
+  }, [fileList, form]);
+  
   // Thiết lập locale cho moment.js
   moment.locale("vi");
 
@@ -223,7 +241,14 @@ export default function CreateContract() {
               },
             ]}
           >
-            
+            <Upload
+              fileList={fileList}
+              onChange={handleChange}
+              beforeUpload={() => false}
+              accept=".pdf"
+            >
+              <Button icon={<UploadOutlined />}>Chọn file đính kèm</Button>
+            </Upload>
           </Form.Item>
 
           <Form.Item
