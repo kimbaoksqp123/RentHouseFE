@@ -6,31 +6,33 @@ import moment from "moment";
 import { HomeOutlined, UserOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import RefreshButton from "../../components/RefreshButton";
+import { useNavigate } from "react-router-dom";
 
 export default function TenantRequestViewHouse() {
   const user = JSON.parse(localStorage.getItem("user"));
   const userID = user ? user.id : null;
   const [tenantRequests, setTenantRequests] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Gọi fetchData() khi component được render lần đầu tiên
 
   const fetchData = () => {
     axios
-    .get(`${serveURL}request_view_houses/tenant_request/index`, {
-      params: {
-        userID: userID,
-      },
-    })
+      .get(`${serveURL}request_view_houses/tenant_request/index`, {
+        params: {
+          userID: userID,
+        },
+      })
 
-    .then((response) => {
-      setTenantRequests(response.data);
-    })
-    .catch((error) => {
-      console.error("Error fetching requests:", error);
-    });
+      .then((response) => {
+        setTenantRequests(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching requests:", error);
+      });
   };
 
   const handleRefresh = () => {
@@ -82,10 +84,18 @@ export default function TenantRequestViewHouse() {
   const [modalTitle, setModalTitle] = useState(null);
 
   const handleAction = (action, id) => {
-    setCurrentRequestId(id);
     setAction(action);
-    setIsModalVisible(true);
+    if (action === "create_contract") {
+      sessionStorage.setItem("tenantID", id.user_id);
+      sessionStorage.setItem("houseID", id.house_id);
+      navigate(`/${userID}/contract/create`);
+    } else {
+      setCurrentRequestId(id);
+      setIsModalVisible(true);
+    }
   };
+
+
 
   useEffect(() => {
     if (action === "accept") {
@@ -104,20 +114,25 @@ export default function TenantRequestViewHouse() {
   };
 
   const handleModalAcction = () => {
-    const url = `${serveURL}request_view_houses/tenant_request/${currentRequestId}/${action}`;
-    // console.log(url, modalText);
-    axios
-      .post(url, { id: currentRequestId, message: modalText, action: action })
-      .then((response) => {
-        message.success(`${action} thành công`);
-        setIsModalVisible(false);
-        // Refresh the request list or handle state update here
-      })
-      .catch((error) => {
-        console.error(`Error accepting request:`, error);
-        message.error(`${action} thất bại`);
-        setIsModalVisible(false);
-      });
+    if (action === "create_contract") {
+      navigate(`/${userID}/contract/create`);
+      return;
+    } else {
+      const url = `${serveURL}request_view_houses/tenant_request/${currentRequestId}/${action}`;
+      // console.log(url, modalText);
+      axios
+        .post(url, { id: currentRequestId, message: modalText, action: action })
+        .then((response) => {
+          message.success(`${action} thành công`);
+          setIsModalVisible(false);
+          // Refresh the request list or handle state update here
+        })
+        .catch((error) => {
+          console.error(`Error accepting request:`, error);
+          message.error(`${action} thất bại`);
+          setIsModalVisible(false);
+        });
+    }
   };
 
   const columns = [
@@ -148,12 +163,12 @@ export default function TenantRequestViewHouse() {
     {
       title: "Lời nhắn từ khách",
       dataIndex: "tenant_message",
-      width: "20%",
+      width: "15%",
     },
     {
       title: "Lời nhắn của tôi",
       dataIndex: "rent_message",
-      width: "20%",
+      width: "15%",
     },
     {
       title: "Lịch hẹn",
@@ -259,6 +274,13 @@ export default function TenantRequestViewHouse() {
           actions.push(
             <div className="flex flex-col  items-center w-32">
               <button
+                key="create_contract"
+                className="w-full mb-2 bg-green-500 hover:bg-green-400 text-white py-2 px-4 rounded"
+                onClick={() => handleAction("create_contract", record)}
+              >
+                Tạo hợp đồng
+              </button>
+              <button
                 key="cancel"
                 className="w-full mb-2 bg-yellow-500 hover:bg-yellow-400 text-white py-2 px-4 rounded"
                 onClick={() => handleAction("cancel", id)}
@@ -296,7 +318,7 @@ export default function TenantRequestViewHouse() {
 
   return (
     <div className="main-box flex flex-col">
-      <RefreshButton handleRefresh={handleRefresh}/>
+      <RefreshButton handleRefresh={handleRefresh} />
       <Table
         columns={columns}
         dataSource={tenantRequests}
@@ -316,7 +338,10 @@ export default function TenantRequestViewHouse() {
         onCancel={handleModalCancel}
         okText="Xác nhận"
         cancelText="Hủy bỏ"
-        okButtonProps={{ className: 'bg-blue-500', style: { borderColor: 'blue' } }}
+        okButtonProps={{
+          className: "bg-blue-500",
+          style: { borderColor: "blue" },
+        }}
       >
         {action !== "delete" && (
           <>

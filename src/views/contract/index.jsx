@@ -1,4 +1,5 @@
 import React from "react";
+import "./index.css";
 import "react-slideshow-image/dist/styles.css";
 import CreateContract from "./create_contract";
 

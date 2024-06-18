@@ -1,21 +1,33 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import { Input, InputNumber } from "antd";
 import { PostContext } from "../routes";
 import { filterPostsWithinScope } from "../apis/matrixAPI";
 export default function AdvanceFilter({ marginTop }) {
-  const { listPost, setListPost } = useContext(PostContext);
+  const { listPost, setListPost, filterCondition } = useContext(PostContext);
   const [address, setAddress] = useState("");
   const [scope, setScope] = useState("");
+  // const [prevListPost, setPrevListPost] = useState([]);
+  const prevListPost = useRef(listPost);
 
+
+  // useEffect(() => {
+  //   setPrevListPost(listPost);
+  // // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [filterCondition]);
+  
   const handleFilterClick = async () => {
     // Gọi hàm filterPostsWithinScope ở đây
     const filteredPosts = await filterPostsWithinScope(
       address,
-      listPost,
+      prevListPost,
       scope
     );
     setListPost(filteredPosts);
   };
+
+
+  console.log(filterCondition);
+  console.log(prevListPost);
  
   return (
     <div>

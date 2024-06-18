@@ -1,11 +1,14 @@
 import React from "react";
 import axios from "axios";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "react-slideshow-image/dist/styles.css";
-import { useEffect } from "react";
-import { Form, DatePicker, Space, Input, ConfigProvider } from "antd";
+import { useEffect, useState } from "react";
+import { Form, DatePicker, Space, Input, ConfigProvider, Upload } from "antd";
 import { toast } from "react-toastify";
 import { serveURL } from "../../constants/index";
+import { getUserInfo } from "../../apis/getUser";
+import { UploadOutlined } from '@ant-design/icons';
+
 
 import moment from "moment";
 import "moment/locale/vi"; // Import locale cho moment.js
@@ -13,8 +16,6 @@ import locale from "antd/locale/vi_VN";
 import dayjs from "dayjs";
 import "dayjs/locale/vi";
 dayjs.locale("vi");
-
-const { TextArea } = Input;
 
 const formItemLayout = {
   labelCol: {
@@ -39,25 +40,39 @@ const formItemLayout = {
 export default function CreateContract() {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user"));
-  const userID = user ? user.id : null;
   const token = localStorage.getItem("token");
-  const { houseID } = useParams();
+  const tenantID = sessionStorage.getItem("tenantID");
+  const houseID = sessionStorage.getItem("houseID");
+  const [tenantInfo, setTenantInfo] = useState(null);
+
+  useEffect(() => {
+    const fetchTenantInfo = async () => {
+      if (tenantID) {
+        try {
+          const data = await getUserInfo(tenantID, token);
+          setTenantInfo(data);
+        } catch (error) {
+          console.error("Error fetching tenant information:", error);
+        }
+      }
+    };
+
+    fetchTenantInfo();
+  }, [tenantID, token]);
+
   const [form] = Form.useForm();
 
   useEffect(() => {
-    // Set the initial values when the component mounts
     form.setFieldsValue({
-      userID: userID,
+      tenantID: tenantID,
     });
-  }, [form, userID]); // Run the effect when form or userID changes
+  }, [form, tenantID]);
 
   useEffect(() => {
-    // Set the initial values when the component mounts
     form.setFieldsValue({
-      houseID: parseInt(houseID),
+      houseID: houseID,
     });
-  }, [form, houseID]); // Run the effect when form or houseID changes
-
+  }, [form, houseID]);
   const onFinish = async (values) => {
     // Log the form data for testing purposes
     console.log("Received values from form:", values);
@@ -97,15 +112,44 @@ export default function CreateContract() {
     <div className="create_request_view_house">
       <ConfigProvider locale={locale}>
         <Form {...formItemLayout} form={form} onFinish={onFinish}>
-          <Form.Item name="userID" label="User ID" hidden></Form.Item>
-          <Form.Item name="houseID" label="User ID" hidden></Form.Item>
+          <h4>A. Thông tin bên cho thuê</h4>
+          <div className="rent_infor">
+            <Form.Item name="rent_name" label="Tên">
+              <Input disabled placeholder={user?.name} />
+            </Form.Item>
+            <Form.Item name="rent_address" label="Địa chỉ">
+              <Input disabled placeholder={user?.address} />
+            </Form.Item>
+            <Form.Item name="rent_phone" label="Số ĐT">
+              <Input disabled placeholder={user?.phone} />
+            </Form.Item>
+            <Form.Item name="rent_cccd_number" label="Số CCCD">
+              <Input disabled placeholder={user?.cccd_number} />
+            </Form.Item>
+          </div>
+          <h4>B. Thông tin bên thuê</h4>
+          <Form.Item name="tenant_name" label="Tên">
+              <Input disabled placeholder={tenantInfo?.name} />
+            </Form.Item>
+            <Form.Item name="tenant_address" label="Địa chỉ">
+              <Input disabled placeholder={tenantInfo?.address} />
+            </Form.Item>
+            <Form.Item name="tenant_phone" label="Số ĐT">
+              <Input disabled placeholder={tenantInfo?.phone} />
+            </Form.Item>
+            <Form.Item name="tenant_cccd_number" label="Số CCCD">
+              <Input disabled placeholder={tenantInfo?.cccd_number} />
+            </Form.Item>
+            <h4>C. Nội dung hợp đồng</h4>
+          <Form.Item name="tenantID" label="Tenant ID" hidden></Form.Item>
+          <Form.Item name="houseID" label="House ID" hidden></Form.Item>
           <Form.Item
-            name="view_time"
-            label="Thời gian"
+            name="start_date"
+            label="Thời gian bắt đầu"
             rules={[
               {
                 required: true,
-                message: "Hãy chọn thời gian bạn tới xem phòng",
+                message: "Hãy chọn thời gian bắt đầu hợp đồng",
               },
               {
                 validator: (_, value) => {
@@ -122,13 +166,12 @@ export default function CreateContract() {
             <Space direction="vertical" size={14}>
               <DatePicker
                 renderExtraFooter={() => ""}
-                showTime
-                format="DD/MM/YYYY HH:mm:ss"
+                format="DD/MM/YYYY"
                 onChange={(value) => {
                   if (value)
                     form.setFieldValue(
-                      "view_time",
-                      dayjs(value).format("YYYY-MM-DD HH:mm:ss")
+                      "start_date",
+                      dayjs(value).format("YYYY-MM-DD")
                     );
                 }}
               />
@@ -136,16 +179,51 @@ export default function CreateContract() {
           </Form.Item>
 
           <Form.Item
-            name="tenant_message"
-            label="Lời nhắn"
+            name="end_date"
+            label="Thời gian kết thúc"
             rules={[
               {
                 required: true,
-                message: "Hãy nhập lời nhắn tới chủ trọ",
+                message: "Hãy chọn thời gian kết thúc hợp đồng",
+              },
+              {
+                validator: (_, value) => {
+                  if (value && dayjs(value).isAfter(dayjs())) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(
+                    "Thời gian phải sau thời điểm hiện tại"
+                  );
+                },
               },
             ]}
           >
-            <TextArea placeholder="Nhập mô tả" rows={4} />
+            <Space direction="vertical" size={14}>
+              <DatePicker
+                renderExtraFooter={() => ""}
+                format="DD/MM/YYYY"
+                onChange={(value) => {
+                  if (value)
+                    form.setFieldValue(
+                      "end_date",
+                      dayjs(value).format("YYYY-MM-DD")
+                    );
+                }}
+              />
+            </Space>
+          </Form.Item>
+
+          <Form.Item
+            name="file"
+            label="File đính kèm"
+            rules={[
+              {
+                required: true,
+                message: "Hãy tải lên file đính kèm",
+              },
+            ]}
+          >
+            
           </Form.Item>
 
           <Form.Item
