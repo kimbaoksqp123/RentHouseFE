@@ -3,12 +3,20 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "react-slideshow-image/dist/styles.css";
 import { useEffect, useState } from "react";
-import { Form, DatePicker, Space, Input, ConfigProvider, Upload, Button } from "antd";
+import {
+  Form,
+  DatePicker,
+  Space,
+  Input,
+  ConfigProvider,
+  Upload,
+  Button,
+} from "antd";
 import { toast } from "react-toastify";
 import { serveURL } from "../../constants/index";
 import { getUserInfo } from "../../apis/getUser";
-import { UploadOutlined } from '@ant-design/icons';
-
+import { UploadOutlined } from "@ant-design/icons";
+import PDFViewer from "../../components/PDFViewer";
 
 import moment from "moment";
 import "moment/locale/vi"; // Import locale cho moment.js
@@ -45,6 +53,7 @@ export default function CreateContract() {
   const houseID = sessionStorage.getItem("houseID");
   const [tenantInfo, setTenantInfo] = useState(null);
   const [fileList, setFileList] = useState([]);
+  const [pdfUrl, setPdfUrl] = useState(null);
 
   useEffect(() => {
     const fetchTenantInfo = async () => {
@@ -112,7 +121,7 @@ export default function CreateContract() {
   };
 
   const handleChange = ({ fileList }) => {
-    setFileList(fileList.slice(-1)); 
+    setFileList(fileList.slice(-1));
   };
 
   useEffect(() => {
@@ -120,9 +129,11 @@ export default function CreateContract() {
       form.setFieldsValue({
         file: fileList[0].originFileObj,
       });
+      const url = URL.createObjectURL(fileList[0].originFileObj);
+      setPdfUrl(url);
     }
   }, [fileList, form]);
-  
+
   // Thiết lập locale cho moment.js
   moment.locale("vi");
 
@@ -147,18 +158,18 @@ export default function CreateContract() {
           </div>
           <h4>B. Thông tin bên thuê</h4>
           <Form.Item name="tenant_name" label="Tên">
-              <Input disabled placeholder={tenantInfo?.name} />
-            </Form.Item>
-            <Form.Item name="tenant_address" label="Địa chỉ">
-              <Input disabled placeholder={tenantInfo?.address} />
-            </Form.Item>
-            <Form.Item name="tenant_phone" label="Số ĐT">
-              <Input disabled placeholder={tenantInfo?.phone} />
-            </Form.Item>
-            <Form.Item name="tenant_cccd_number" label="Số CCCD">
-              <Input disabled placeholder={tenantInfo?.cccd_number} />
-            </Form.Item>
-            <h4>C. Nội dung hợp đồng</h4>
+            <Input disabled placeholder={tenantInfo?.name} />
+          </Form.Item>
+          <Form.Item name="tenant_address" label="Địa chỉ">
+            <Input disabled placeholder={tenantInfo?.address} />
+          </Form.Item>
+          <Form.Item name="tenant_phone" label="Số ĐT">
+            <Input disabled placeholder={tenantInfo?.phone} />
+          </Form.Item>
+          <Form.Item name="tenant_cccd_number" label="Số CCCD">
+            <Input disabled placeholder={tenantInfo?.cccd_number} />
+          </Form.Item>
+          <h4>C. Nội dung hợp đồng</h4>
           <Form.Item name="tenantID" label="Tenant ID" hidden></Form.Item>
           <Form.Item name="houseID" label="House ID" hidden></Form.Item>
           <Form.Item
@@ -250,6 +261,9 @@ export default function CreateContract() {
               <Button icon={<UploadOutlined />}>Chọn file đính kèm</Button>
             </Upload>
           </Form.Item>
+          <div className="pdf-preview mb-4">
+            {pdfUrl && <PDFViewer pdfUrl={pdfUrl} />}
+          </div>
 
           <Form.Item
             wrapperCol={{
@@ -262,7 +276,7 @@ export default function CreateContract() {
                 className="w-16 ml-2 bg-green-500 hover:bg-green-600 text-white py-2 px-2.5 rounded text-base"
                 type="submit"
               >
-                Gửi
+                Tạo
               </button>
             </Space>
           </Form.Item>
