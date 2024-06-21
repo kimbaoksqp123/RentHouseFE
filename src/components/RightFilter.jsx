@@ -6,28 +6,16 @@ export default function AdvanceFilter({ marginTop }) {
   const { listPost, setListPost, filterCondition } = useContext(PostContext);
   const [address, setAddress] = useState("");
   const [scope, setScope] = useState("");
-  // const [prevListPost, setPrevListPost] = useState([]);
-  const prevListPost = useRef(listPost);
-
-
-  // useEffect(() => {
-  //   setPrevListPost(listPost);
-  // // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [filterCondition]);
   
   const handleFilterClick = async () => {
     // Gọi hàm filterPostsWithinScope ở đây
     const filteredPosts = await filterPostsWithinScope(
       address,
-      prevListPost,
+      listPost,
       scope
     );
     setListPost(filteredPosts);
   };
-
-
-  console.log(filterCondition);
-  console.log(prevListPost);
  
   return (
     <div>

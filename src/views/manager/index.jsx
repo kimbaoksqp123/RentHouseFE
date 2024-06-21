@@ -12,6 +12,7 @@ import { Layout, Menu } from "antd";
 import ManagerRequestViewHouse from "./request_view_house";
 import ManagerHouse from "./house";
 import ManagerAccount from "./account";
+import ManagerContract from "./contract";
 const { Content, Sider } = Layout;
 
 export default function Manager() {
@@ -38,7 +39,7 @@ export default function Manager() {
       case "3":
         return <ManagerRequestViewHouse />;
       case "4":
-        return <p>Quản lý hợp đồng</p>;
+        return <ManagerContract />;
       default:
         return null;
     }
