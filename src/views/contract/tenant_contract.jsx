@@ -8,13 +8,13 @@ import { Link } from "react-router-dom";
 import RefreshButton from "../../components/RefreshButton";
 import { useNavigate } from "react-router-dom";
 import PDFViewer from "../../components/PDFViewer";
-import RentContractDetail from "./RentContractDetail";
+import { getUserInfo } from "../../apis/getUser";
 
-export default function RentContract() {
+export default function TenantContract() {
   const user = JSON.parse(localStorage.getItem("user"));
   const token = localStorage.getItem("token");
   const userID = user ? user.id : null;
-  const [rentContracts, setRentContracts] = useState([]);
+  const [tenantContracts, setTenantContracts] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -24,13 +24,13 @@ export default function RentContract() {
 
   const fetchData = () => {
     axios
-      .get(`${serveURL}contracts/rent_contract/index`, {
+      .get(`${serveURL}contracts/tenant_contract/index`, {
         params: {
           userID: userID,
         },
       })
       .then((response) => {
-        setRentContracts(response.data);
+        setTenantContracts(response.data);
       })
       .catch((error) => {
         console.error("Error fetching requests:", error);
@@ -58,36 +58,31 @@ export default function RentContract() {
   // Action Confirm Modal
   const [isConfirmModalVisible, setIsConfirmModalVisible] = useState(false);
   const [modalText, setModalText] = useState("");
-
-  const [modalTitle, setModalTitle] = useState(null);
-
-  // Detail Contract Modal
-  const [isDetailModalVisible, setIsDetailModalVisible] = useState(false);
-  const showDetailModal = (id) => {
-    setCurrentContractId(id);
-    setIsDetailModalVisible(true);
-  };
-
-  const handleDetailModalCancel = () => {
-    setIsDetailModalVisible(false);
-  };
-
-  const [currentContractId, setCurrentContractId] = useState(null);
+  const [currentRequestId, setCurrentRequestId] = useState(null);
   const [action, setAction] = useState(null);
+  const [modalTitle, setModalTitle] = useState(null);
 
   const handleAction = (action, id) => {
     setAction(action);
-    if (action === "edit") {
-      navigate(`/contract/${id}/edit`);
+    if (action === "create_contract") {
+      sessionStorage.setItem("tenantID", id.user_id);
+      sessionStorage.setItem("houseID", id.house_id);
+      navigate(`/${userID}/contract/create`);
     } else {
-      setCurrentContractId(id);
+      setCurrentRequestId(id);
       setIsConfirmModalVisible(true);
     }
   };
 
   useEffect(() => {
-    if (action === "delete") {
-      setModalTitle("Bạn có chắc muốn xóa hợp đồng?");
+    if (action === "accept") {
+      setModalTitle("Chấp nhận lịch hẹn");
+    } else if (action === "reject") {
+      setModalTitle("Từ chối lịch hẹn");
+    } else if (action === "delete") {
+      setModalTitle("Bạn có chắc muốn xóa lịch hẹn?");
+    } else if (action === "cancel") {
+      setModalTitle("Bạn có chắc muốn hủy lịch hẹn?");
     }
   }, [action]);
 
@@ -96,18 +91,17 @@ export default function RentContract() {
   };
 
   const handleConfirmModalAction = () => {
-    if (action === "delete") {
-      const url = `${serveURL}contracts/rent_contract/${currentContractId}/${action}`;
+    if (action === "create_contract") {
+      navigate(`/${userID}/contract/create`);
+      return;
+    } else {
+      const url = `${serveURL}request_view_houses/tenant_request/${currentRequestId}/${action}`;
       axios
-        .post(url, {
-          id: currentContractId,
-          message: modalText,
-          action: action,
-        })
+        .post(url, { id: currentRequestId, message: modalText, action: action })
         .then((response) => {
           message.success(`${action} thành công`);
           setIsConfirmModalVisible(false);
-          fetchData();
+          fetchData(); // Refresh the request list or handle state update here
         })
         .catch((error) => {
           console.error(`Error accepting request:`, error);
@@ -119,12 +113,12 @@ export default function RentContract() {
 
   const columns = [
     {
-      title: "Người thuê",
+      title: "Người cho thuê",
       align: "center",
-      dataIndex: "tenant_id",
+      dataIndex: "rent_id",
       width: "8%",
-      render: (user_id) => (
-        <Link to={`/user/${user_id}/information`}>
+      render: (rent_id) => (
+        <Link to={`/user/${rent_id}/information`}>
           <div className="flex items-center">
             <UserOutlined className="text-xl cursor-pointer mx-auto" />
           </div>
@@ -148,15 +142,10 @@ export default function RentContract() {
       title: "Thời gian bắt đầu",
       dataIndex: "start_date",
       width: "15%",
-      sorter: (a, b) =>
-        moment(a.start_date).unix() - moment(b.start_date).unix(),
+      sorter: (a, b) => moment(a.start_date).unix() - moment(b.start_date).unix(),
       render: (start_date) => {
         const formattedDate = moment(start_date).format("DD-MM-YYYY");
-        return (
-          <div>
-            <p>{formattedDate}</p>
-          </div>
-        );
+        return <div><p>{formattedDate}</p></div>;
       },
     },
     {
@@ -166,19 +155,14 @@ export default function RentContract() {
       sorter: (a, b) => moment(a.end_date).unix() - moment(b.end_date).unix(),
       render: (end_date) => {
         const formattedDate = moment(end_date).format("DD-MM-YYYY");
-        return (
-          <div>
-            <p>{formattedDate}</p>
-          </div>
-        );
+        return <div><p>{formattedDate}</p></div>;
       },
     },
     {
       title: "Thời gian tạo",
       dataIndex: "created_at",
       width: "15%",
-      sorter: (a, b) =>
-        moment(a.created_at).unix() - moment(b.created_at).unix(),
+      sorter: (a, b) => moment(a.created_at).unix() - moment(b.created_at).unix(),
       render: (created_at) => {
         const formattedTime = moment(created_at).format("HH [giờ] mm [phút]");
         const formattedDate = moment(created_at).format("DD-MM-YYYY");
@@ -193,7 +177,7 @@ export default function RentContract() {
     {
       title: "File hợp đồng",
       dataIndex: "file",
-      width: "10%",
+      width: "5%",
       render: (file) => (
         <button
           key="view"
@@ -227,7 +211,7 @@ export default function RentContract() {
           <button
             key="show"
             className="w-full bg-yellow-500 hover:bg-yellow-400 text-white py-2 px-4 rounded"
-            onClick={() => showDetailModal(id)}
+            onClick={() => handleAction("show", id)}
           >
             Xem chi tiết
           </button>
@@ -235,12 +219,13 @@ export default function RentContract() {
       ),
     },
   ];
+
   return (
     <div className="main-box flex flex-col">
       <RefreshButton handleRefresh={handleRefresh} />
       <Table
         columns={columns}
-        dataSource={rentContracts}
+        dataSource={tenantContracts}
         bordered
         scroll={{ y: 600 }}
         showSorterTooltip={{ target: "sorter-icon" }}
@@ -262,10 +247,7 @@ export default function RentContract() {
         onCancel={handleConfirmModalCancel}
         okText="Xác nhận"
         cancelText="Hủy bỏ"
-        okButtonProps={{
-          className: "bg-blue-500",
-          style: { borderColor: "blue" },
-        }}
+        okButtonProps={{ className: "bg-blue-500", style: { borderColor: "blue" } }}
       >
         {action !== "delete" && (
           <>
@@ -277,15 +259,6 @@ export default function RentContract() {
             />
           </>
         )}
-      </Modal>
-      <Modal
-        title="Chi tiết hợp đồng"
-        open={isDetailModalVisible}
-        onCancel={handleDetailModalCancel}
-        footer={null}
-        width="50%"
-      >
-        <RentContractDetail rentID={userID} contractID={currentContractId} token={token}/>
       </Modal>
     </div>
   );
