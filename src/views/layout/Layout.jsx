@@ -158,7 +158,7 @@ export default function Layout({ children }) {
           </Link>
         </Stack>
       </div>
-      <div
+      {/* <div
         className="fs-14 fw-700 d-flex justify-content-center border bg-dark text-white flex-wrap"
         style={{ minHeight: "42px", marginTop: "54px" }}
       >
@@ -206,9 +206,9 @@ export default function Layout({ children }) {
             Chung cư
           </span>
         </div>
-      </div>
+      </div> */}
       <div
-        className="d-flex flex-column align-items-center py-3"
+        className="d-flex flex-column align-items-center py-4 mt-12"
         style={{ backgroundColor: "#EAFEF1" }}
       >
         <div className="text-main-bolder fw-bold fs-30 fw-700">
