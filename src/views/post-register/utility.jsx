@@ -260,6 +260,7 @@ export default function Utility() {
                 listType="picture-card"
                 fileList={fileList[index] || []}
                 onPreview={handlePreview}
+                beforeUpload={() => false}
                 onChange={handleChange(index)}
               >
                 {fileList[index]?.length >= 1 ? null : uploadButton}
