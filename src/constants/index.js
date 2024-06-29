@@ -1,7 +1,7 @@
 import BasicInformation from "../views/post-register/basic_information";
 import Utility from "../views/post-register/utility";
 
-export const serveURL = "https://rent-house-0e71d6c3b728.herokuapp.com/api/";
+export const serveURL = "http://127.0.0.1:8000/api/";
 
 export const sortTypes = [
     { name: "Mặc định", value: 0 },

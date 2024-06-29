@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const customAxios = axios.create({
-    baseURL: "https://rent-house-0e71d6c3b728.herokuapp.com/api",
+    baseURL: "http://127.0.0.1:8000/api",
     // paramsSerializer: params => queryString.stringify(params),
 });
 

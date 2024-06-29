@@ -18,6 +18,7 @@ import { serveURL } from "../../constants/index";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { GrSubtractCircle } from "react-icons/gr";
 import { HouseContext } from "./index";
+import { toast } from "react-toastify";
 
 const formItemLayout = {
   labelCol: {
@@ -48,6 +49,22 @@ const getBase64 = (file) =>
   });
 
 export default function Utility() {
+  // Data from Basic Information
+  const {
+    userID,
+    type,
+    title,
+    district,
+    ward,
+    address,
+    land_area,
+    price,
+    description,
+    bedroom_num,
+    bathroom_num,
+    coordinates,
+    imageAlbum,
+  } = useContext(HouseContext);
   const navigate = useNavigate();
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
@@ -101,7 +118,6 @@ export default function Utility() {
 
   const [form] = Form.useForm();
   const token = localStorage.getItem("token");
-  const data = useContext(HouseContext);
   const [utilities, setUtilities] = useState([{ image: null }]);
   const addUtility = () => {
     setUtilities([...utilities, {}]);
@@ -123,6 +139,41 @@ export default function Utility() {
   };
 
   useEffect(() => {
+    form.setFieldsValue({
+      userID: userID,
+      type: type,
+      title: title,
+      district: district,
+      ward: ward,
+      address: address,
+      land_area: land_area,
+      price: price,
+      description: description,
+      bedroom_num: bedroom_num,
+      bathroom_num: bathroom_num,
+      imageAlbum: imageAlbum,
+      latitude: coordinates.lat,
+      longitude: coordinates.lon,
+    });
+  }, [
+    form,
+    coordinates.lat,
+    coordinates.lon,
+    userID,
+    type,
+    title,
+    district,
+    ward,
+    address,
+    land_area,
+    price,
+    description,
+    bedroom_num,
+    bathroom_num,
+    imageAlbum,
+  ]);
+
+  useEffect(() => {
     const fetchUtilityData = async () => {
       try {
         const response = await axios.get(`${serveURL}utilities`);
@@ -135,11 +186,27 @@ export default function Utility() {
     fetchUtilityData();
   }, []);
 
-  console.log(data.houseID);
-
   const onFinish = async (values) => {
+    const newValues = {
+      ...values,
+      userID: userID,
+      type: type,
+      title: title,
+      district: district,
+      ward: ward,
+      address: address,
+      land_area: land_area,
+      price: price,
+      description: description,
+      bedroom_num: bedroom_num,
+      bathroom_num: bathroom_num,
+      imageAlbum: imageAlbum,
+      latitude: coordinates.lat,
+      longitude: coordinates.lon,
+    };
+    console.log(newValues);
     try {
-      const response = await axios.post(`${serveURL}utilities/store`, values, {
+      const response = await axios.post(`${serveURL}posts/store`, newValues, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${token}`,
@@ -150,14 +217,13 @@ export default function Utility() {
 
       if (response.status === 200) {
         // Redirect to the tab utilities register page
-
-        navigate(`/house/${data.houseID}`);
+        console.log(response.data);
+        // navigate(`/house/${data.houseID}`);
       }
     } catch (error) {
       // Handle errors
       console.error("Error sending data to API:", error);
     }
-    console.log(values);
   };
 
   return (
@@ -168,14 +234,6 @@ export default function Utility() {
             key={index}
             className="utility rounded-lg border border-green-500 bg-white shadow-md p-4 mb-4"
           >
-            <Form.Item
-              name={["utilities", index, "houseID"]}
-              label="House ID"
-              hidden
-              initialValue={data.houseID}
-            >
-              <Input />
-            </Form.Item>
             <Form.Item
               name={["utilities", index, "utility_id"]}
               label="Kiểu tiện ích"
