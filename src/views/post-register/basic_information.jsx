@@ -1,13 +1,10 @@
-import React from "react";
-import axios from "axios";
+import React, { useContext, useState, useEffect } from "react";
 import "react-slideshow-image/dist/styles.css";
-import { useState, useEffect } from "react";
-// import { useNavigate } from "react-router-dom";
 import { Form, Upload, Modal, Space, Input, Select, InputNumber } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { locationList } from "../../constants/locationList";
-import { serveURL } from "../../constants/index";
-import getCoordinates from '../../apis/geocoding';
+import getCoordinates from "../../apis/geocoding";
+import { HouseContext } from "./index";
 
 const { TextArea } = Input;
 
@@ -39,18 +36,39 @@ const getBase64 = (file) =>
     reader.onerror = (error) => reject(error);
   });
 
-export default function BasicInformation({ sendDataToParent }) {
+export default function BasicInformation() {
+  const {
+    setUserID,
+    type,
+    setType,
+    title,
+    setTitle,
+    district,
+    setDistrict,
+    setWard,
+    address,
+    setAddress,
+    land_area,
+    setLandArea,
+    price,
+    setPrice,
+    description,
+    setDescription,
+    bedroom_num,
+    setBedroomNumber,
+    bathroom_num,
+    setBathroomNumber,
+    setCoordinates,
+    imageAlbum,
+    setImageAlbum,
+    setActiveKey,
+  } = useContext(HouseContext);
   const [selectedDistrict, setSelectedDistrict] = useState();
   const [wards, setWards] = useState([]);
   const [selectedWard, setSelectedWard] = useState();
-  // const navigate = useNavigate();
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
-  const [imageAlbum, setImageAlbum] = useState([]);
-  const [currenTab, setCurrenTab] = useState(0);
-  const [houseID, setHouseID] = useState();
-  // const [sendData, setSendData] = useState({ currenTab: 0, houseID: null });
 
   const handleCancel = () => setPreviewOpen(false);
   const handlePreview = async (file) => {
@@ -70,6 +88,8 @@ export default function BasicInformation({ sendDataToParent }) {
       imageAlbum: newFileList.map((file) => file.originFileObj),
     });
   };
+  
+
   const uploadButton = (
     <div>
       <PlusOutlined />
@@ -82,52 +102,21 @@ export default function BasicInformation({ sendDataToParent }) {
       </div>
     </div>
   );
+
   const user = JSON.parse(localStorage.getItem("user"));
-  const userID = user ? user.id : null;
-  const token = localStorage.getItem("token");
   const [form] = Form.useForm();
 
   useEffect(() => {
-    // Set the initial values when the component mounts
-    form.setFieldsValue({
-      userID: userID,
-    });
-  }, [form, userID]); // Run the effect when form or userID changes
-
+    setUserID(user.id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
 
   const onFinish = async (values) => {
-    // Log the form data for testing purposes
-    console.log("Received values from form:", values);
-
-    // You can send the form data to your API using Axios
-    try {
-      const response = await axios.post(`${serveURL}posts/store`, values, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      // Handle the response from the API as needed
-
-      if (response.status === 200) {
-        // Redirect to the tab utilities register page
-        const houseId = response.data.id;
-        setHouseID(houseId);
-        setCurrenTab(1);
-        // navigate(`/house/${houseId}`);
-      }
-    } catch (error) {
-      // Handle errors
-      console.error("Error sending data to API:", error);
-    }
+    const updatedFileList = imageAlbum.map(file => file.originFileObj);
+    setImageAlbum(updatedFileList);
+    setActiveKey('2');
+  
   };
-
-  useEffect(() => {
-    // Set dữ liệu cho sendData
-    sendDataToParent({ currenTab, houseID });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currenTab, houseID]);
 
   const handleDistrictChange = (value, district) => {
     setSelectedDistrict(district);
@@ -135,6 +124,7 @@ export default function BasicInformation({ sendDataToParent }) {
     form.setFieldValue({
       ward: null,
     });
+    setDistrict(value);
   };
 
   useEffect(() => {
@@ -151,8 +141,6 @@ export default function BasicInformation({ sendDataToParent }) {
   }, [selectedDistrict]);
 
   const wardArray = Object.values(wards);
-  const [address, setAddress] = useState("");
-  const [coordinates, setCoordinates] = useState({ lat: '', lon: '' });
   const handleAddressChange = (e) => {
     setAddress(e.target.value);
   };
@@ -160,32 +148,21 @@ export default function BasicInformation({ sendDataToParent }) {
   const handleGetCoordinates = async () => {
     try {
       const coords = await getCoordinates(address);
-      setCoordinates(coords);   
+      setCoordinates(coords);
     } catch (error) {
-      setCoordinates({ lat: '', lon: '' });
+      setCoordinates({ lat: "", lon: "" });
     }
   };
 
-  useEffect(() => {
-    // Set the initial values when the component mounts
-    form.setFieldsValue({
-      latitude: coordinates.lat,
-      longitude: coordinates.lon,
-    });
-  }, [form, coordinates.lat, coordinates.lon]); 
-
-  
-
- 
-
   const handleWardChange = (value, ward) => {
     setSelectedWard(ward);
+    setWard(value);
   };
+
 
   return (
     <div className="basic_information">
       <Form {...formItemLayout} form={form} onFinish={onFinish}>
-        <Form.Item name="userID" label="User ID" hidden></Form.Item>
         <Form.Item
           name="type"
           label="Kiểu nhà trọ"
@@ -196,7 +173,11 @@ export default function BasicInformation({ sendDataToParent }) {
             },
           ]}
         >
-          <Select placeholder="Chọn kiểu trọ">
+          <Select
+            placeholder="Chọn kiểu trọ"
+            value={type}
+            onChange={(value) => setType(value)}
+          >
             <Select.Option value="1">Phòng trọ</Select.Option>
             <Select.Option value="2">Nhà nguyên căn</Select.Option>
             <Select.Option value="3">Chung cư Mini</Select.Option>
@@ -212,7 +193,11 @@ export default function BasicInformation({ sendDataToParent }) {
             },
           ]}
         >
-          <Input placeholder="Nhập tiêu đề phòng trọ"></Input>
+          <Input
+            placeholder="Nhập tiêu đề phòng trọ"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          ></Input>
         </Form.Item>
 
         <Form.Item
@@ -225,7 +210,11 @@ export default function BasicInformation({ sendDataToParent }) {
             },
           ]}
         >
-          <Select placeholder="Quận/Huyện" onChange={handleDistrictChange}>
+          <Select
+            placeholder="Quận/Huyện"
+            value={district}
+            onChange={handleDistrictChange}
+          >
             {locationList.map((location) => (
               <Select.Option key={location.code} value={location.name}>
                 {location.name}
@@ -246,8 +235,8 @@ export default function BasicInformation({ sendDataToParent }) {
           <Select
             id="ward"
             placeholder="Chọn Phường/Xã"
-            onChange={handleWardChange}
             value={selectedWard}
+            onChange={handleWardChange}
           >
             {wardArray.map((ward, index) => (
               <Select.Option key={index} value={ward}>
@@ -282,7 +271,7 @@ export default function BasicInformation({ sendDataToParent }) {
               message: "Hãy nhập diện tích",
             },
             {
-              type: "interger",
+              type: "number",
               message: "Diện tích phải là chữ số",
             },
             {
@@ -295,14 +284,19 @@ export default function BasicInformation({ sendDataToParent }) {
             },
           ]}
         >
-          <Input placeholder="Nhập diện tích"></Input>
+          <InputNumber
+            placeholder="Nhập diện tích"
+            className="w-40"
+            value={land_area}
+            onChange={(value) => setLandArea(value)}
+          />
         </Form.Item>
         <Form.Item
           name="price"
           label="Giá thuê(VNĐ)"
           rules={[
             {
-              type: "interger",
+              type: "number",
               message: "Giá thuê là chữ số",
             },
             {
@@ -319,7 +313,12 @@ export default function BasicInformation({ sendDataToParent }) {
             },
           ]}
         >
-          <Input placeholder="Nhập giá thuê"></Input>
+          <InputNumber
+            placeholder="Nhập giá thuê"
+            value={price}
+            onChange={(value) => setPrice(value)}
+            className="w-40"
+          ></InputNumber>
         </Form.Item>
         <Form.Item
           name="description"
@@ -331,16 +330,20 @@ export default function BasicInformation({ sendDataToParent }) {
             },
           ]}
         >
-          {/* <Input placeholder="Nhập mô tả"></Input> */}
-          <TextArea placeholder="Nhập mô tả" rows={4} />
+          <TextArea
+            placeholder="Nhập mô tả"
+            rows={4}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
         </Form.Item>
         <Form.Item
           name="bedroom_num"
           label="Số phòng ngủ"
           rules={[
             {
-              type: "interger",
-              message: "số phòng ngủ là chữ số",
+              type: "number",
+              message: "Số phòng ngủ là chữ số",
             },
             {
               required: true,
@@ -351,7 +354,7 @@ export default function BasicInformation({ sendDataToParent }) {
                 if (value >= 0) {
                   return Promise.resolve();
                 }
-                return Promise.reject("số phòng ngủ phải lớn hơn 0!");
+                return Promise.reject("Số phòng ngủ phải lớn hơn 0!");
               },
             },
           ]}
@@ -361,6 +364,8 @@ export default function BasicInformation({ sendDataToParent }) {
             min={0}
             max={10}
             className="w-40"
+            value={bedroom_num}
+            onChange={(value) => setBedroomNumber(value)}
           />
         </Form.Item>
         <Form.Item
@@ -368,7 +373,7 @@ export default function BasicInformation({ sendDataToParent }) {
           label="Số phòng tắm"
           rules={[
             {
-              type: "interger",
+              type: "number",
               message: "Số phòng tắm là chữ số",
             },
             {
@@ -390,12 +395,14 @@ export default function BasicInformation({ sendDataToParent }) {
             min={0}
             max={10}
             className="w-40"
+            value={bathroom_num}
+            onChange={(value) => setBathroomNumber(value)}
           />
         </Form.Item>
         <Form.Item
           name="imageAlbum"
           label="Album ảnh"
-          valuePropName="imageAlbum"
+          valuePropName="fileList"
           rules={[
             ({ getFieldValue }) => ({
               validator(_, value) {
@@ -439,7 +446,7 @@ export default function BasicInformation({ sendDataToParent }) {
           <Space>
             <button
               className="bg-green-500 hover:bg-green-600 text-white py-2 px-2.5 rounded"
-              type="submit"
+              // type="submit"
               style={{ fontSize: "large" }}
             >
               Tiếp theo
