@@ -204,7 +204,6 @@ export default function Utility() {
       latitude: coordinates.lat,
       longitude: coordinates.lon,
     };
-    console.log(newValues);
     try {
       const response = await axios.post(`${serveURL}posts/store`, newValues, {
         headers: {
@@ -217,8 +216,9 @@ export default function Utility() {
 
       if (response.status === 200) {
         // Redirect to the tab utilities register page
-        console.log(response.data);
-        // navigate(`/house/${data.houseID}`);
+        const house = response.data;
+        const houseID = house.id;
+        navigate(`/house/${houseID}`);
       }
     } catch (error) {
       // Handle errors
@@ -314,6 +314,7 @@ export default function Utility() {
               valuePropName="image"
             >
               <Upload
+               accept="image/*"
                 action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
                 listType="picture-card"
                 fileList={fileList[index] || []}

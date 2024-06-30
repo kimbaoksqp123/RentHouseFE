@@ -88,6 +88,7 @@ export default function BasicInformation() {
       imageAlbum: newFileList.map((file) => file.originFileObj),
     });
   };
+  
 
   const uploadButton = (
     <div>
@@ -111,19 +112,10 @@ export default function BasicInformation() {
   }, [user]);
 
   const onFinish = async (values) => {
-    // Log the form data for testing purposes
-    // console.log("Received values from form:", values);
+    const updatedFileList = imageAlbum.map(file => file.originFileObj);
+    setImageAlbum(updatedFileList);
     setActiveKey('2');
-    // console.log(
-    //   userID,
-    //   district,
-    //   ward,
-    //   type,
-    //   address,
-    //   imageAlbum,
-    //   land_area,
-    //   price
-    // );
+  
   };
 
   const handleDistrictChange = (value, district) => {
