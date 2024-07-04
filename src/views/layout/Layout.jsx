@@ -149,7 +149,7 @@ export default function Layout({ children }) {
               </Dropdown.Menu>
             </Dropdown>
           )}
-          <Link to="/house_register" className={btnStyle + " nav-link"} onClick={handleLinkClick}>
+          <Link to="/house/create" className={btnStyle + " nav-link"} onClick={handleLinkClick}>
             <Button className={`${btnStyle}`}>
               <span className="text-base font-medium">
                 <IoMdAdd className="inline-block mr-2" /> Đăng phòng trọ

@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { serveURL } from "../../constants/index";
-import { Table, Tag, Modal } from "antd";
+import { Table, Tag, Modal, Spin, Result } from "antd";
 import moment from "moment";
 import { HomeOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import RefreshButton from "../../components/RefreshButton";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 export default function ManagerHouse() {
   const user = JSON.parse(localStorage.getItem("user"));
   const userID = user ? user.id : null;
   const [rentHouses, setRentHouses] = useState([]);
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const [result, setResult] = useState(null);
 
   useEffect(() => {
     fetchData();
@@ -75,32 +77,43 @@ export default function ManagerHouse() {
   const [currentHouseId, setCurrentHouseId] = useState(null);
   const [action, setAction] = useState(null);
   const [modalTitle, setModalTitle] = useState(null);
+  const [resultTitle, setResultTitle] = useState(null);
 
   const handleAction = (action, id) => {
     setCurrentHouseId(id);
     setAction(action);
+    if (action === "edit"){
+      navigate(`/house/${id}/edit`);
+    }
     setIsModalVisible(true);
   };
 
   useEffect(() => {
     if (action === "hiden") {
       setModalTitle("Bạn có chắc muốn ẩn phòng trọ");
+      setResultTitle("Ẩn phòng trọ");
     } else if (action === "unhiden") {
       setModalTitle("Bạn có chắc muốn hiển thị phòng trọ?");
+      setResultTitle("Hiển thị phòng trọ");
     } else if (action === "delete") {
       setModalTitle("Bạn có chắc muốn xóa phòng trọ?");
+      setResultTitle("Xóa phòng trọ");
     } else if (action === "cancel") {
       setModalTitle("Bạn có chắc muốn hủy cho thuê phòng trọ?");
+      setResultTitle("Hủy cho thuê phòng trọ");
     }
   }, [action]);
 
   const handleModalCancel = () => {
     setIsModalVisible(false);
+    setResult(null);
   };
 
   const handleModalAcction = () => {
-    if (action === 'edit') {
+    setIsLoading(true);
+    if (action === "edit") {
       navigate(`/house/${currentHouseId}`);
+      setIsLoading(false);
       return;
     }
     const url = `${serveURL}posts/${currentHouseId}/${action}`;
@@ -108,11 +121,20 @@ export default function ManagerHouse() {
     axios
       .post(url, { id: currentHouseId, action: action })
       .then((response) => {
-        setIsModalVisible(false);
-        // Refresh the request list or handle state update here
+        setIsLoading(false);
+        setResult({
+          status: "success",
+        });
+        setTimeout(() => {
+          setIsModalVisible(false);
+          fetchData();
+          setResult(null);
+        }, 2000);
       })
       .catch((error) => {
         console.error(`Error accepting request:`, error);
+        setIsLoading(false);
+        setResult({ status: "error" });
         setIsModalVisible(false);
       });
   };
@@ -325,7 +347,7 @@ export default function ManagerHouse() {
       <div className="main-box flex flex-col">
         <RefreshButton handleRefresh={handleRefresh} />
         <Table
-        className="mb-3"
+          className="mb-3"
           columns={columns}
           dataSource={rentHouses}
           bordered
@@ -345,8 +367,22 @@ export default function ManagerHouse() {
           onCancel={handleModalCancel}
           okText="Xác nhận"
           cancelText="Hủy bỏ"
-          okButtonProps={{ className: 'bg-blue-500', style: { borderColor: 'blue' } }}
-        ></Modal>
+          okButtonProps={{
+            className: "bg-blue-500",
+            style: { borderColor: "blue" },
+          }}
+        >
+          {isLoading ? (
+            <div className="flex justify-center items-center">
+              <Spin />
+            </div>
+          ) : result ? (
+            <Result
+              status={result.status}
+              title={result.status === "success" ? `${resultTitle} thành công` :  `${resultTitle} thất bại`}
+            />
+          ) : null}
+        </Modal>
       </div>
     </div>
   );

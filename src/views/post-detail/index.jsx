@@ -135,7 +135,7 @@ export default function PostDetail() {
                         src={item.url}
                         alt={item.id}
                       ></img>
-                    </div>            
+                    </div>
                   );
                 })}
               </Slide>
@@ -162,14 +162,23 @@ export default function PostDetail() {
                 Đã đăng vào {dayjs(postDetail.created_at).format("HH:ss")} ngày{" "}
                 {dayjs(postDetail.created_at).format("DD/MM/YYYY")}
               </p>
-              <Button
-                icon={<WhatsAppOutlined />}
-                onClick={() =>
-                  navigate("/house/" + postId + "/request_view_house/create")
-                }
-              >
-                Đặt lịch xem phòng
-              </Button>
+              {postDetail.user && postDetail.user.id !== userId && (
+                <Button
+                  icon={<WhatsAppOutlined />}
+                  onClick={(e) => {
+                    if (!userId) {
+                      e.preventDefault();
+                      toast.warn("Bạn cần đăng nhập để đặt lịch xem phòng!");
+                    } else {
+                      navigate(
+                        "/house/" + postId + "/request_view_house/create"
+                      );
+                    }
+                  }}
+                >
+                  Đặt lịch xem phòng
+                </Button>
+              )}
             </div>
 
             <div className="d-flex mt-2 mx-3">
@@ -313,7 +322,9 @@ export default function PostDetail() {
           </div>
         </div>
         <div className="box-border mt-4 ">
-          <p style={{ fontSize: "20px", fontWeight: "700" }}>Phòng trọ nổi bật</p>
+          <p style={{ fontSize: "20px", fontWeight: "700" }}>
+            Phòng trọ nổi bật
+          </p>
           {hotNews &&
             hotNews.map((item) => {
               return (
