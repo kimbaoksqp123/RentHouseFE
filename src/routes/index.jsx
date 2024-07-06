@@ -92,7 +92,7 @@ const AppRoutes = () => {
                     <Route path="/" element={<Home />} />
                     <Route path="/house/:postId" element={<PostDetail />} />
                     <Route path="/bookmarks" element={<Bookmark />} />
-                    <Route path="/house_register" element={<PostRegister />} />
+                    <Route path="/house/create" element={<PostRegister />} />
                     <Route path="/house/:houseID/request_view_house/create" element={<RequestViewHouse />} />
                     <Route path="/:userID/manager" element={<Manager />} />
                     <Route path="/:userID/contract/create" element={<Contract />} />

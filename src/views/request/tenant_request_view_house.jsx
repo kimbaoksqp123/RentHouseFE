@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { serveURL } from "../../constants/index";
-import { Table, Tag, message, Modal, Input } from "antd";
+import { Table, Tag, Modal, Input, Spin, Result } from "antd";
 import moment from "moment";
 import { HomeOutlined, UserOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
@@ -13,6 +13,8 @@ export default function TenantRequestViewHouse() {
   const userID = user ? user.id : null;
   const [tenantRequests, setTenantRequests] = useState([]);
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const [result, setResult] = useState(null);
 
   useEffect(() => {
     fetchData();
@@ -82,6 +84,7 @@ export default function TenantRequestViewHouse() {
   const [currentRequestId, setCurrentRequestId] = useState(null);
   const [action, setAction] = useState(null);
   const [modalTitle, setModalTitle] = useState(null);
+  const [resultTitle, setResultTitle] = useState(null);
 
   const handleAction = (action, id) => {
     setAction(action);
@@ -95,42 +98,56 @@ export default function TenantRequestViewHouse() {
     }
   };
 
-
-
   useEffect(() => {
     if (action === "accept") {
-      setModalTitle("Chấp nhận lịch hẹn");
+      setModalTitle("Bạn có chắc muốn chấp nhận lịch hẹn");
+      setResultTitle("Chấp nhận lịch hẹn");
     } else if (action === "reject") {
-      setModalTitle("Từ chối lịch hẹn");
+      setModalTitle("Bạn có chắc từ chối lịch hẹn");
+      setResultTitle("Từ chối lịch hẹn");
     } else if (action === "delete") {
-      setModalTitle("Bạn có chắc muốn xóa lịch hẹn?");
+      setModalTitle("Bạn có chắc muốn xóa lịch hẹn");
+      setResultTitle("Xóa lịch hẹn");
     } else if (action === "cancel") {
       setModalTitle("Bạn có chắc muốn hủy lịch hẹn?");
+      setResultTitle("Hủy lịch hẹn");
     }
   }, [action]);
 
   const handleModalCancel = () => {
     setIsModalVisible(false);
+    setModalText(null);
   };
 
   const handleModalAcction = () => {
+    setIsLoading(true);
     if (action === "create_contract") {
       navigate(`/${userID}/contract/create`);
+      setIsLoading(false);
       return;
     } else {
       const url = `${serveURL}request_view_houses/tenant_request/${currentRequestId}/${action}`;
-      // console.log(url, modalText);
       axios
         .post(url, { id: currentRequestId, message: modalText, action: action })
         .then((response) => {
-          message.success(`${action} thành công`);
-          setIsModalVisible(false);
-          // Refresh the request list or handle state update here
+          setIsLoading(false);
+          setResult({
+            status: "success",
+          });
+          setTimeout(() => {
+            setIsModalVisible(false);
+            fetchData();
+            setResult(null);
+          }, 1000);
+          setModalText(null);
         })
         .catch((error) => {
           console.error(`Error accepting request:`, error);
-          message.error(`${action} thất bại`);
+          setIsLoading(false);
+          setResult({ status: "error" });
           setIsModalVisible(false);
+          setResult(null);
+          setModalText(null);
         });
     }
   };
@@ -343,17 +360,31 @@ export default function TenantRequestViewHouse() {
           style: { borderColor: "blue" },
         }}
       >
-        {action !== "delete" && (
+        {isLoading ? (
+          <div className="flex justify-center items-center">
+            <Spin />
+          </div>
+        ) : (
           <>
-            <p>Nhập lời nhắn của bạn tới khách hàng:</p>
-            <Input.TextArea
-              value={modalText}
-              onChange={(e) => setModalText(e.target.value)}
-              rows={4}
-            />
+            {action !== "delete" && !result && (
+              <>
+                <p>Nhập lời nhắn của bạn tới khách hàng:</p>
+                <Input.TextArea
+                  value={modalText}
+                  onChange={(e) => setModalText(e.target.value)}
+                  rows={4}
+                />
+              </>
+            )}
+            {result && (
+              <Result
+                status={result.status}
+                title={result.status === "success" ? `${resultTitle} thành công` :  `${resultTitle} thất bại`}
+              />
+            )}
           </>
         )}
       </Modal>
     </div>
-  );
+  );  
 }
