@@ -4,6 +4,7 @@ import Layout from '../views/layout';
 import Home from '../views/home';
 import PostDetail from '../views/post-detail';
 import PostRegister from '../views/post-register';
+import PostEdit from '../views/post-register/edit';
 import RequestViewHouse from '../views/request';
 import Manager from '../views/manager';
 import { createContext } from 'react';
@@ -93,6 +94,7 @@ const AppRoutes = () => {
                     <Route path="/house/:postId" element={<PostDetail />} />
                     <Route path="/bookmarks" element={<Bookmark />} />
                     <Route path="/house/create" element={<PostRegister />} />
+                    <Route path="/house/:houseID/edit" element={<PostEdit />} />
                     <Route path="/house/:houseID/request_view_house/create" element={<RequestViewHouse />} />
                     <Route path="/:userID/manager" element={<Manager />} />
                     <Route path="/:userID/contract/create" element={<Contract />} />
