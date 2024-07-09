@@ -9,12 +9,19 @@ import RefreshButton from "../../components/RefreshButton";
 import { useNavigate } from "react-router-dom";
 import PDFViewer from "../../components/PDFViewer";
 import RentContractDetail from "./RentContractDetail";
+import { ContractContext } from "../manager/contract";
+import { useContext } from "react";
 
 export default function RentContract() {
   const user = JSON.parse(localStorage.getItem("user"));
-  const token = localStorage.getItem("token");
   const userID = user ? user.id : null;
   const [rentContracts, setRentContracts] = useState([]);
+  const {
+    contractID,
+    setContractID,
+  } = useContext(ContractContext);
+
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -64,7 +71,7 @@ export default function RentContract() {
   // Detail Contract Modal
   const [isDetailModalVisible, setIsDetailModalVisible] = useState(false);
   const showDetailModal = (id) => {
-    setCurrentContractId(id);
+    setContractID(id);
     setIsDetailModalVisible(true);
   };
 
@@ -72,7 +79,6 @@ export default function RentContract() {
     setIsDetailModalVisible(false);
   };
 
-  const [currentContractId, setCurrentContractId] = useState(null);
   const [action, setAction] = useState(null);
 
   const handleAction = (action, id) => {
@@ -80,7 +86,7 @@ export default function RentContract() {
     if (action === "edit") {
       navigate(`/contract/${id}/edit`);
     } else {
-      setCurrentContractId(id);
+      setContractID(id);
       setIsConfirmModalVisible(true);
     }
   };
@@ -97,11 +103,10 @@ export default function RentContract() {
 
   const handleConfirmModalAction = () => {
     if (action === "delete") {
-      const url = `${serveURL}contracts/rent_contract/${currentContractId}/${action}`;
+      const url = `${serveURL}contracts/rent_contract/${contractID}/${action}`;
       axios
         .post(url, {
-          id: currentContractId,
-          message: modalText,
+          id: contractID,
           action: action,
         })
         .then((response) => {
@@ -285,7 +290,7 @@ export default function RentContract() {
         footer={null}
         width="50%"
       >
-        <RentContractDetail rentID={userID} contractID={currentContractId} token={token}/>
+        <RentContractDetail/>
       </Modal>
     </div>
   );

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { serveURL } from "../../constants/index";
 import { Table, message, Modal, Input } from "antd";
@@ -8,13 +8,17 @@ import { Link } from "react-router-dom";
 import RefreshButton from "../../components/RefreshButton";
 import { useNavigate } from "react-router-dom";
 import PDFViewer from "../../components/PDFViewer";
-import { getUserInfo } from "../../apis/getUser";
+import { ContractContext } from "../manager/contract";
+import TenantContractDetail from "./TenantContractDetail";
 
 export default function TenantContract() {
   const user = JSON.parse(localStorage.getItem("user"));
-  const token = localStorage.getItem("token");
   const userID = user ? user.id : null;
   const [tenantContracts, setTenantContracts] = useState([]);
+  const {
+    contractID,
+    setContractID,
+  } = useContext(ContractContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -58,18 +62,27 @@ export default function TenantContract() {
   // Action Confirm Modal
   const [isConfirmModalVisible, setIsConfirmModalVisible] = useState(false);
   const [modalText, setModalText] = useState("");
-  const [currentRequestId, setCurrentRequestId] = useState(null);
   const [action, setAction] = useState(null);
   const [modalTitle, setModalTitle] = useState(null);
 
+  // Detail Contract Modal
+  const [isDetailModalVisible, setIsDetailModalVisible] = useState(false);
+  const showDetailModal = (id) => {
+    setContractID(id);
+    setIsDetailModalVisible(true);
+  };
+
+  const handleDetailModalCancel = () => {
+    setIsDetailModalVisible(false);
+  };
+
+
   const handleAction = (action, id) => {
     setAction(action);
-    if (action === "create_contract") {
-      sessionStorage.setItem("tenantID", id.user_id);
-      sessionStorage.setItem("houseID", id.house_id);
-      navigate(`/${userID}/contract/create`);
+    if (action === "edit") {
+      navigate(`/contract/${id}/edit`);
     } else {
-      setCurrentRequestId(id);
+      setContractID(id);
       setIsConfirmModalVisible(true);
     }
   };
@@ -95,9 +108,9 @@ export default function TenantContract() {
       navigate(`/${userID}/contract/create`);
       return;
     } else {
-      const url = `${serveURL}request_view_houses/tenant_request/${currentRequestId}/${action}`;
+      const url = `${serveURL}request_view_houses/tenant_request/${contractID}/${action}`;
       axios
-        .post(url, { id: currentRequestId, message: modalText, action: action })
+        .post(url, { id: contractID, action: action })
         .then((response) => {
           message.success(`${action} thành công`);
           setIsConfirmModalVisible(false);
@@ -211,7 +224,7 @@ export default function TenantContract() {
           <button
             key="show"
             className="w-full bg-yellow-500 hover:bg-yellow-400 text-white py-2 px-4 rounded"
-            onClick={() => handleAction("show", id)}
+            onClick={() => showDetailModal(id)}
           >
             Xem chi tiết
           </button>
@@ -259,6 +272,15 @@ export default function TenantContract() {
             />
           </>
         )}
+      </Modal>
+      <Modal
+        title="Chi tiết hợp đồng"
+        open={isDetailModalVisible}
+        onCancel={handleDetailModalCancel}
+        footer={null}
+        width="50%"
+      >
+        <TenantContractDetail/>
       </Modal>
     </div>
   );
