@@ -6,11 +6,12 @@ import { getUserInfo } from "../../apis/getUser";
 import moment from "moment";
 import { ContractContext } from "../manager/contract";
 
-export default function RentContractDetail() {
+export default function TenantContractDetail() {
   const token = localStorage.getItem("token");
   const [contract, setContract] = useState(null);
-  const [tenant, setTenant] = useState(null);
-  const [tenantID, setTenantID] = useState(null);
+  const [rentID, setRentID] = useState(null);
+  const [rent, setRent] = useState(null);
+  const [houseID, setHouseID] = useState(null);
   const user = JSON.parse(localStorage.getItem("user"));
   const { contractID } = useContext(ContractContext);
 
@@ -28,7 +29,7 @@ export default function RentContractDetail() {
       })
       .then((response) => {
         setContract(response.data);
-        setTenantID(response.data.tenant_id);
+        setHouseID(response.data.house_id);
       })
       .catch((error) => {
         console.error("Error fetching contract:", error);
@@ -36,23 +37,37 @@ export default function RentContractDetail() {
   };
 
   useEffect(() => {
-    const fetchTenantInfo = async () => {
-      if (tenantID != null) {
+    const fetchHouseData = async () => {
+      if (houseID != null) {
         try {
-          const data = await getUserInfo(tenantID, token);
-          setTenant(data);
+          const response = await axios.get(`${serveURL}posts/getHouseWithID/${houseID}`);
+          setRentID(response.data.user_id);
         } catch (error) {
-          console.error("Error fetching tenant information:", error);
+          console.error("Error fetching house data:", error);
         }
       }
     };
 
-    fetchTenantInfo();
-  }, [tenantID, token]);
-  console.log(tenantID);
-  console.log(tenant);
+    fetchHouseData();
+  }, [houseID]);
+  
+  useEffect(() => {
+    const fetchRentInfo = async () => {
+      if (rentID != null) {
+        try {
+          const data = await getUserInfo(rentID, token);
+          setRent(data);
+        } catch (error) {
+          console.error("Error fetching rent information:", error);
+        }
+      }
+    };
 
-  if (!contract || !tenant) {
+    fetchRentInfo();
+  }, [rentID, token]);
+  
+
+  if (!contract || !rent) {
     return <div>Loading...</div>;
   }
 
@@ -64,7 +79,7 @@ export default function RentContractDetail() {
           Tên:
         </div>
         <div className="name border border-gray-500 ml-4 pl-2 pr-2 rounded w-full h-12 flex items-center">
-          {user.name}
+          {rent.name}
         </div>
       </div>
       <div className="content flex w-full ml-4 text-base">
@@ -72,7 +87,7 @@ export default function RentContractDetail() {
           Địa chỉ:
         </div>
         <div className="name border border-gray-500 ml-4 pl-2 pr-2 rounded w-full h-12 flex items-center">
-          {user.address}
+          {rent.address}
         </div>
       </div>
       <div className="content flex w-full ml-4 text-base">
@@ -80,7 +95,7 @@ export default function RentContractDetail() {
           Số ĐT:
         </div>
         <div className="name border border-gray-500 ml-4 pl-2 pr-2 rounded w-full h-12 flex items-center">
-          {user.phone}
+          {rent.phone}
         </div>
       </div>
       <div className="content flex w-full ml-4 text-base">
@@ -88,7 +103,7 @@ export default function RentContractDetail() {
           Số CCCD:
         </div>
         <div className="name border border-gray-500 ml-4 pl-2 pr-2 rounded w-full h-12 flex items-center">
-          {user.cccd_number}
+          {rent.cccd_number}
         </div>
       </div>
       <h4 className="mb-4 mt-2">B. Thông tin bên thuê</h4>
@@ -97,7 +112,7 @@ export default function RentContractDetail() {
           Tên:
         </div>
         <div className="name  border border-gray-500 ml-4 pl-2 pr-2 rounded w-full h-12 flex items-center">
-          {tenant.name}
+          {user.name}
         </div>
       </div>
       <div className="content flex w-full ml-4 text-base">
@@ -105,7 +120,7 @@ export default function RentContractDetail() {
           Địa chỉ:
         </div>
         <div className="name  border border-gray-500 ml-4 pl-2 pr-2 rounded w-full h-12 flex items-center">
-          {tenant.address}
+          {user.address}
         </div>
       </div>
       <div className="content flex w-full ml-4 text-base">
@@ -113,7 +128,7 @@ export default function RentContractDetail() {
           Số ĐT:
         </div>
         <div className="name  border border-gray-500 ml-4 pl-2 pr-2 rounded w-full h-12 flex items-center">
-          {tenant.phone}
+          {user.phone}
         </div>
       </div>
       <div className="content flex w-full ml-4 text-base">
@@ -121,7 +136,7 @@ export default function RentContractDetail() {
           Số CCCD:
         </div>
         <div className="name  border border-gray-500 ml-4 pl-2 pr-2 rounded w-full h-12 flex items-center">
-          {tenant.cccd_number}
+          {rent.cccd_number}
         </div>
       </div>
       <h4 className="mb-4 mt-2">C. Nội dung hợp đồng</h4>
