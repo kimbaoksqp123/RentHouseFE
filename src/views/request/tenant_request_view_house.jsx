@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { serveURL } from "../../constants/index";
 import { Table, Tag, Modal, Input, Spin, Result } from "antd";
@@ -7,6 +7,8 @@ import { HomeOutlined, UserOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import RefreshButton from "../../components/RefreshButton";
 import { useNavigate } from "react-router-dom";
+import { RequestContext } from "../manager/request_view_house";
+import UserInfor from "../../components/UserInfor";
 
 export default function TenantRequestViewHouse() {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -15,6 +17,7 @@ export default function TenantRequestViewHouse() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState(null);
+  const { setViewUserID, openUserModal, setOpenUserModal } = useContext(RequestContext);
 
   useEffect(() => {
     fetchData();
@@ -85,6 +88,7 @@ export default function TenantRequestViewHouse() {
   const [action, setAction] = useState(null);
   const [modalTitle, setModalTitle] = useState(null);
   const [resultTitle, setResultTitle] = useState(null);
+  const [footerModal, setFooterModal] = useState(true);
 
   const handleAction = (action, id) => {
     setAction(action);
@@ -95,6 +99,7 @@ export default function TenantRequestViewHouse() {
     } else {
       setCurrentRequestId(id);
       setIsModalVisible(true);
+      setFooterModal(true);
     }
   };
 
@@ -140,6 +145,7 @@ export default function TenantRequestViewHouse() {
             setResult(null);
           }, 1000);
           setModalText(null);
+          setFooterModal(false);
         })
         .catch((error) => {
           console.error(`Error accepting request:`, error);
@@ -148,9 +154,19 @@ export default function TenantRequestViewHouse() {
           setIsModalVisible(false);
           setResult(null);
           setModalText(null);
+          setFooterModal(false);
         });
     }
   };
+
+  const handleIconClick = (user_id) => {
+    setViewUserID(user_id);
+    setOpenUserModal(true);
+  };
+
+  const cancelViewUserModal = () => {
+    setOpenUserModal(false);
+  }
 
   const columns = [
     {
@@ -158,11 +174,12 @@ export default function TenantRequestViewHouse() {
       dataIndex: "user_id",
       width: "8%",
       render: (user_id) => (
-        <Link to={`/user/${user_id}/information`}>
-          <div className="flex items-center">
-            <UserOutlined className="text-xl cursor-pointer mx-auto" />
-          </div>
-        </Link>
+        <div className="flex items-center">
+          <UserOutlined
+            className="text-xl cursor-pointer mx-auto"
+            onClick={() => handleIconClick(user_id)}
+          />
+        </div>
       ),
     },
     {
@@ -358,7 +375,9 @@ export default function TenantRequestViewHouse() {
         okButtonProps={{
           className: "bg-blue-500",
           style: { borderColor: "blue" },
-        }}
+        }
+      }
+      footer={footerModal ? undefined : null}
       >
         {isLoading ? (
           <div className="flex justify-center items-center">
@@ -379,12 +398,26 @@ export default function TenantRequestViewHouse() {
             {result && (
               <Result
                 status={result.status}
-                title={result.status === "success" ? `${resultTitle} thành công` :  `${resultTitle} thất bại`}
+                title={result.status === "success" ? `${resultTitle} thành công` : `${resultTitle} thất bại`}
               />
             )}
           </>
         )}
       </Modal>
+      <Modal 
+        title="Thông tin người thuê trọ"
+        centered
+        open={openUserModal}
+        onCancel={cancelViewUserModal}
+        cancelText="Đóng"
+        okButtonProps={{
+          className: "bg-blue-500",
+          style: { borderColor: "blue" },
+        }}
+        footer={null}
+        width="50%">
+          <UserInfor/>
+      </Modal>
     </div>
-  );  
+  );
 }

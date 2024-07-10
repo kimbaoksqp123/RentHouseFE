@@ -4,6 +4,7 @@ import Spinner from "react-bootstrap/Spinner";
 import { useForm } from "react-hook-form";
 import userApi from "../../apis/userApi";
 import { useState } from "react";
+import { Link } from 'react-router-dom';
 
 export default function Login() {
   const {
@@ -66,6 +67,13 @@ export default function Login() {
                 Sai tên đăng nhập hoặc mật khẩu
               </div>
             )}
+            <div className="forgot-password mt-2">
+              <Link to={'/forgot-password'}>
+                <div className="flex items-center">
+                  Quên mật khẩu
+                </div>
+              </Link>
+            </div>
             <Button type="submit" className="w-100 mt-3">
               <span className="fw-500">Đăng nhập</span>
               {isLoading && <Spinner size="sm" className="ms-1" />}
