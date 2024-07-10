@@ -12,6 +12,7 @@ import postApi from '../apis/postApi';
 import Login from '../views/auth/Login';
 import Bookmark from '../views/bookmark';
 import Register from '../views/auth/Register';
+import Edit from '../views/auth/Edit';
 import Contract from '../views/contract';
 import { Spin } from 'antd';
 
@@ -106,6 +107,7 @@ const AppRoutes = () => {
         />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/user/edit" element={<Edit />} />
       </Routes>
     </BrowserRouter>
   );

@@ -3,7 +3,6 @@ import Col from "react-bootstrap/Col";
 import "./pageStyle.css";
 import SavedListPost from "./SavedListPost";
 import { useContext, useEffect } from "react";
-import RightFilter from "../../components/RightFilter";
 import { PostContext } from "../../routes";
 
 export default function Bookmark() {
@@ -20,13 +19,10 @@ export default function Bookmark() {
     <>
       <Row
         className="mt-3 pb-5"
-        style={{ marginLeft: "10%", marginRight: "20%" }}
+        style={{ marginLeft: "10%", marginRight: "10%" }}
       >
-        <Col className="" md={9}>
+        <Col className="" md={12}>
           <SavedListPost />
-        </Col>
-        <Col className="md-down-collapse p-2" md={3}>
-          <RightFilter marginTop="39px" />
         </Col>
       </Row>
     </>

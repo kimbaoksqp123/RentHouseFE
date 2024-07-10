@@ -82,11 +82,13 @@ export default function RentRequestViewHouse() {
   const [action, setAction] = useState(null);
   const [modalTitle, setModalTitle] = useState(null);
   const [resultTitle, setResultTitle] = useState(null);
+  const [footerModal, setFooterModal] = useState(true);
 
   const handleAction = (action, id) => {
     setCurrentRequestId(id);
     setAction(action);
     setIsModalVisible(true);
+    setFooterModal(true);
   };
 
   useEffect(() => {
@@ -126,6 +128,7 @@ export default function RentRequestViewHouse() {
           setResult(null);
         }, 1000);
         setModalText(null);
+        setFooterModal(false);
       })
       .catch((error) => {
         console.error(`Error accepting request:`, error);
@@ -134,6 +137,7 @@ export default function RentRequestViewHouse() {
           setIsModalVisible(false);
           setResult(null);
           setModalText(null);
+          setFooterModal(false);
       });
   };
 
@@ -314,6 +318,7 @@ export default function RentRequestViewHouse() {
           className: "bg-blue-500",
           style: { borderColor: "blue" },
         }}
+        footer={footerModal ? undefined : null}
       >
         {isLoading ? (
           <div className="flex justify-center items-center">

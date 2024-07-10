@@ -23,7 +23,7 @@ export default function ManagerAccount() {
     setAction(action);
     if (action === "delete") {
         setIsModalVisible(true);
-    } else (action === "edit") && navigate(`/user/${userData[0].id}/edit`);  
+    } else (action === "edit") && navigate(`/user/edit`);  
   };
 
   useEffect(() => {
