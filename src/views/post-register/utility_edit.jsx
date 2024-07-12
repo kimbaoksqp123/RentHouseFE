@@ -57,6 +57,8 @@ export default function UtilityEdit() {
     setUtilities
   } = useContext(EditHouseContext);
 
+  console.log(utilities);
+
   const navigate = useNavigate();
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
@@ -238,7 +240,7 @@ export default function UtilityEdit() {
               <Form.Item name={["utilities", index, "id"]} label="ID" initialValue={utility.id} hidden></Form.Item>
               <Form.Item
                 name={["utilities", index, "utility_id"]}
-                initialValue={utility.id}
+                initialValue={utility.utility_id}
                 label="Kiểu tiện ích"
                 rules={[
                   {

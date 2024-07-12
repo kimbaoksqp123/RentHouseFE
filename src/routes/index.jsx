@@ -20,6 +20,7 @@ export const PostContext = createContext();
 
 const AppRoutes = () => {
   const [listPost, setListPost] = useState([]);
+  const [filterListPost, setFilterListPost] = useState([]);
   const [sortType, setSortType] = useState(0);
   const [curPage, setCurPage] = useState(1);
   const [filterCondition, setFilterCondition] = useState({});
@@ -61,6 +62,8 @@ const AppRoutes = () => {
               value={{
                 listPost,
                 setListPost,
+                filterListPost,
+                setFilterListPost,
                 sortType,
                 setSortType,
                 filterCondition,

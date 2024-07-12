@@ -15,6 +15,8 @@ export default function ListPost() {
   const {
     listPost,
     setListPost,
+    filterListPost,
+    setFilterListPost,
     sortType,
     setSortType,
     curPage,
@@ -33,30 +35,50 @@ export default function ListPost() {
   };
 
   const handleSave = async (post_id) => {
-    if (!user_id) toast.warn("Vui lòng đăng nhập!");
-    else {
+    if (!user_id) {
+      toast.warn("Vui lòng đăng nhập!");
+    } else {
       await userApi.addBm(user_id, post_id);
       toast.success("Đã lưu vào mục Yêu thích!");
-      let temp = [...listPost];
-      for (let i = 0; i < temp.length; i++) {
-        if (temp[i].id === post_id) {
-          temp[i].isSaved = true;
-        }
+
+      const updatePosts = (posts) => {
+        return posts.map((post) => {
+          if (post.id === post_id) {
+            return { ...post, isSaved: true };
+          }
+          return post;
+        });
+      };
+
+      if (filterListPost.length > 0) {
+        setListPost(updatePosts(listPost));
+        setFilterListPost(updatePosts(filterListPost));
+      } else {
+        setListPost(updatePosts(listPost));
       }
-      setListPost(temp);
     }
   };
+
 
   const handleRemoveSaved = async (post_id) => {
     await userApi.deleteBm(user_id, post_id);
     toast.success("Đã bỏ lưu khỏi mục Yêu thích!");
-    let temp = [...listPost];
-    for (let i = 0; i < temp.length; i++) {
-      if (temp[i].id === post_id) {
-        temp[i].isSaved = false;
-      }
+
+    const updatePosts = (posts) => {
+      return posts.map((post) => {
+        if (post.id === post_id) {
+          return { ...post, isSaved: false };
+        }
+        return post;
+      });
+    };
+
+    if (filterListPost.length > 0) {
+      setListPost(updatePosts(listPost));
+      setFilterListPost(updatePosts(filterListPost));
+    } else {
+      setListPost(updatePosts(listPost));
     }
-    setListPost(temp);
   };
 
   useEffect(() => {
@@ -68,10 +90,12 @@ export default function ListPost() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sortType]);
 
+  const postsToDisplay = filterListPost.length > 0 ? filterListPost : listPost;
+
   return (
     <>
       <div className="text-main fs-14 fw-500">
-        Hiện có {listPost.length} kết quả
+        Hiện có {postsToDisplay.length} kết quả
       </div>
       <Form className="mb-3">
         <Form.Group>
@@ -97,10 +121,10 @@ export default function ListPost() {
           </Form.Select>
         </Form.Group>
       </Form>
-      {listPost.length > 0 ? (
+      {postsToDisplay.length > 0 ? (
         Array.from({ length: perPage }, (_, index) => {
-          if (curPageStartIndex + index > listPost.length - 1) return null;
-          let item = listPost[curPageStartIndex + index];
+          if (curPageStartIndex + index > postsToDisplay.length - 1) return null;
+          let item = postsToDisplay[curPageStartIndex + index];
           let images = item.images;
           return (
             <div
@@ -167,7 +191,7 @@ export default function ListPost() {
                   />
                 )}
               </div>
-              
+
               <div className="mt-2 fw-600">Địa chỉ: {item.address}</div>
               <div className="text-sm fw-500">
                 Đã đăng vào {dayjs(item.created_at).format("HH:ss")} ngày{" "}
@@ -179,9 +203,9 @@ export default function ListPost() {
       ) : (
         <h4>Không có bài đăng nào phù hợp!</h4>
       )}
-      {listPost.length > 0 && (
+      {postsToDisplay.length > 0 && (
         <Pagination
-          total={listPost.length}
+          total={postsToDisplay.length}
           pageSize={perPage}
           current={curPage}
           onChange={handleRedirectPage}

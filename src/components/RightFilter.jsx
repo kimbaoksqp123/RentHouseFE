@@ -1,10 +1,10 @@
 import React, { useState, useContext, useEffect } from "react";
-import { Input, InputNumber, Spin } from "antd";
+import { Input, InputNumber, Spin, Result } from "antd";
 import { PostContext } from "../routes";
 import { filterPostsWithinScope } from "../apis/matrixAPI";
 
 export default function AdvanceFilter({ marginTop }) {
-  const { listPost, setListPost, filterCondition } = useContext(PostContext);
+  const { listPost, setFilterListPost, filterCondition, filterListPost } = useContext(PostContext);
   const [address, setAddress] = useState("");
   const [scope, setScope] = useState("");
   const [loading, setLoading] = useState(false);
@@ -13,7 +13,7 @@ export default function AdvanceFilter({ marginTop }) {
     setLoading(true);
     try {
       const filteredPosts = await filterPostsWithinScope(address, listPost, scope);
-      setListPost(filteredPosts);
+      setFilterListPost(filteredPosts);
     } catch (error) {
       console.error("Error filtering posts:", error);
     } finally {
@@ -62,6 +62,13 @@ export default function AdvanceFilter({ marginTop }) {
           </button>
         </div>
       </div>
+      {filterListPost.length === 0 && scope>0 && (
+        <Result
+          status="404"
+          title="Không có phòng trọ phù hợp"
+          subTitle="Không có phòng trọ phù hợp nằm trong phạm vi trên"
+        />
+      )}
     </div>
   );
 }
