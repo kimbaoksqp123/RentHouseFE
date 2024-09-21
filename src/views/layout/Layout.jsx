@@ -9,6 +9,7 @@ import { useContext, useEffect, useState } from "react";
 import Dropdown from "react-bootstrap/Dropdown";
 import { PostContext } from "../../routes";
 import { toast } from "react-toastify";
+import renthouseImg from "../../assets/renthouse.png";
 
 export default function Layout({ children }) {
   const {
@@ -64,11 +65,15 @@ export default function Layout({ children }) {
   return (
     <>
       <div className="fixed-top">
+        
         <Stack
           direction="horizontal"
           gap={3}
           className="border py-2 pe-3 bg-white"
         >
+          <Link to="/" className={btnStyle + " nav-link"} onClick={handleLinkClick}>
+          <img src={renthouseImg} alt="Logo" className="w-16 h-10" />
+          </Link>
           <div
             className={`${btnStyle} ml-auto text-red-500`}
             onClick={() => {
@@ -126,6 +131,7 @@ export default function Layout({ children }) {
               </Link>
             </>
           ) : (
+            
             <Dropdown className="">
               <Dropdown.Toggle variant="">
                 <span className="fs-14 fw-600">{user.name}</span>

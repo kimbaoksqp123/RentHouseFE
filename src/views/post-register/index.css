@@ -16,7 +16,8 @@
     padding: 10px;
 }
 
-.basic_information {
+.basic_information,
+.basic_information_edit {
     border-radius: 5px;
     border: 1px solid #4FAE5A;
     background: #FFF;
