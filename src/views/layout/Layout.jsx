@@ -10,6 +10,7 @@ import Dropdown from "react-bootstrap/Dropdown";
 import { PostContext } from "../../routes";
 import { toast } from "react-toastify";
 import renthouseImg from "../../assets/renthouse.png";
+import userApi from "../../apis/userApi";
 
 export default function Layout({ children }) {
   const {
@@ -22,8 +23,9 @@ export default function Layout({ children }) {
 
   const btnStyle = "flex items-center gap-1 cursor-pointer";
 
-  const user = JSON.parse(localStorage.getItem("user"));
+  const accessToken = JSON.parse(localStorage.getItem("access-token"));
   const [isAuth, setIsAuth] = useState(false);
+  const [user, setUser] = useState({});
   const navigate = useNavigate();
   const handleLogout = () => {
     setIsAuth(false);
@@ -33,7 +35,7 @@ export default function Layout({ children }) {
 
   const handleManager = (selectedItem) => {
     sessionStorage.setItem("selectedItem", selectedItem);
-    navigate(`/${userId}/manager`);
+    // navigate(`/${userId}/manager`);
   };
 
   const handleSelectApartType = (type) => {
@@ -47,16 +49,30 @@ export default function Layout({ children }) {
     setFilterCondition({ type: [type] });
   };
 
+  console.log(accessToken, isAuth);
+
+  // Gọi API lấy thông tin người dùng
   useEffect(() => {
-    if (user) {
+    const fetchUserInfo = async () => {
+      try {
+        const response = await userApi.getUserInfo(accessToken);
+        setUser(response.data);
+      } catch (error) {
+        console.error("Lỗi khi lấy thông tin người dùng: ", error);
+      }
+    };
+
+    if (accessToken) {
       setIsAuth(true);
+      fetchUserInfo();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [accessToken]);
 
-  const userId = JSON.parse(localStorage.getItem("user"))?.id;
+  console.log(user);
+
   const handleLinkClick = (e) => {
-    if (!userId) {
+    if (!accessToken) {
       e.preventDefault();
       toast.warn('Bạn cần đăng nhập để đăng phòng trọ!');
     }
@@ -134,7 +150,7 @@ export default function Layout({ children }) {
             
             <Dropdown className="">
               <Dropdown.Toggle variant="">
-                <span className="fs-14 fw-600">{user.name}</span>
+                {/* <span className="fs-14 fw-600">{user.name}</span> */}
               </Dropdown.Toggle>
               <Dropdown.Menu>
                 <Dropdown.Item className="fs-14 fw-500 bg-blue-500 hover:bg-blue-700" onClick={handleLogout}>

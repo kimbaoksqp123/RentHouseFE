@@ -21,9 +21,8 @@ export default function Login() {
       setIsLoading(true);
       setIsFailed(false);
       const res = await userApi.login(data);
+      localStorage.setItem("access-token", JSON.stringify(res));
       setIsLoading(false);
-      console.log("res::", res);
-      localStorage.setItem("user", JSON.stringify(res));
       window.location.href = "/";
     } catch (e) {
       setIsLoading(false);
