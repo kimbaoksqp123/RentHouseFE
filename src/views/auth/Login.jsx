@@ -40,7 +40,7 @@ export default function Login() {
           <h4 className="border-0 border-bottom text-center py-2">Đăng nhập</h4>
           <div className="px-3 mb-4">
             <Form.Group>
-              <Form.Label className="fw-500">Tên đăng nhập Test1234</Form.Label>
+              <Form.Label className="fw-500">Tên đăng dakldjaskdjalksdjaslkdjalsjdlj nhập</Form.Label>
               <Form.Control
                 type="text"
                 {...register("email", { required: "Không được để trống 123455" })}

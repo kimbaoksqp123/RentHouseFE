@@ -17,7 +17,7 @@ export default function Mcomment({ listCommentData, postId }) {
     }
     const submitCommetFunc = async () => {
         setIndexComment(3)
-        setUserComment('');
+        setUserComment('');adsdasdasdasd
         const response = await postApi.reviewPost({
             user_id: user.id,
             post_id: postId,

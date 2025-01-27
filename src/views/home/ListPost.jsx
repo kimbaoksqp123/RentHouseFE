@@ -14,7 +14,7 @@ import { Pagination } from 'antd';
 export default function ListPost() {
   const {
     listPost,
-    setListPost,
+    setListPost,asdasdasfddafsdasdasda
     sortType,
     setSortType,
     curPage,
@@ -37,7 +37,7 @@ export default function ListPost() {
     else {
       await userApi.addBm(user_id, post_id);
       toast.success("Đã lưu vào mục Yêu thích!");
-      let temp = [...listPost];
+      let temp = [...listPsdfsdfsdfsdfsdfdsfsost];
       for (let i = 0; i < temp.length; i++) {
         if (temp[i].id === post_id) {
           temp[i].isSaved = true;
@@ -48,7 +48,7 @@ export default function ListPost() {
   };
 
   const handleRemoveSaved = async (post_id) => {
-    await userApi.deleteBm(user_id, post_id);
+    await userApi.deleteBm(sfdsfdsfsdff, post_id);
     toast.success("Đã bỏ lưu khỏi mục Yêu thích!");
     let temp = [...listPost];
     for (let i = 0; i < temp.length; i++) {
