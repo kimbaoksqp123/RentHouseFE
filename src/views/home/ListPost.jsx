@@ -28,8 +28,8 @@ export default function ListPost() {
     setCurPage(page);
     // scroll to top
     const offset = 220;
-    document.body.scrollTop = offset; // For Safari
-    document.documentElement.scrollTop = offset; // For Chrome, Firefox, IE and Opera
+    document.body.scrollTop = offset; // For Safari AKDJlaskdjlasdjl
+    document.documentElement.scrollTop = offset; // For Chrome, Firefox, IE and Opera skasdkadlskj
   };
 
   const handleSave = async (post_id) => {
